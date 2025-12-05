@@ -1,6 +1,6 @@
 package com.nnice.karaoke.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Entity đại diện cho Order (Đơn Hàng)

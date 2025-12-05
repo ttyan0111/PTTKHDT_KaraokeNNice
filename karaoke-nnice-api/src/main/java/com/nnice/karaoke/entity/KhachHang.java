@@ -1,67 +1,64 @@
 package com.nnice.karaoke.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Entity đại diện cho Khách Hàng
  */
 @Entity
-@Table(name = "khach_hang")
+@Table(name = "KhachHang")
 public class KhachHang {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "MaKH")
+    private Long maKH;
     
-    @Column(name = "ten_khach_hang", nullable = false)
-    private String tenKhachHang;
+    @Column(name = "TenKH", nullable = false, length = 100)
+    private String tenKH;
     
-    @Column(name = "so_dien_thoai", unique = true)
-    private String soDienThoai;
+    @Column(name = "SDT", unique = true, length = 15)
+    private String sdt;
     
-    @Column(name = "email")
+    @Column(name = "Email", length = 100)
     private String email;
     
-    @Column(name = "dia_chi")
-    private String diaChi;
-    
-    @Column(name = "so_cmnd")
-    private String soCMND;
+    @Column(name = "LoaiKhach", length = 50)
+    private String loaiKhach; // VD: "VIP", "Thường", "Doanh nghiệp"
 
     // Constructors
     public KhachHang() {}
 
-    public KhachHang(String tenKhachHang, String soDienThoai, String email, String diaChi, String soCMND) {
-        this.tenKhachHang = tenKhachHang;
-        this.soDienThoai = soDienThoai;
+    public KhachHang(String tenKH, String sdt, String email, String loaiKhach) {
+        this.tenKH = tenKH;
+        this.sdt = sdt;
         this.email = email;
-        this.diaChi = diaChi;
-        this.soCMND = soCMND;
+        this.loaiKhach = loaiKhach;
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getMaKH() {
+        return maKH;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMaKH(Long maKH) {
+        this.maKH = maKH;
     }
 
-    public String getTenKhachHang() {
-        return tenKhachHang;
+    public String getTenKH() {
+        return tenKH;
     }
 
-    public void setTenKhachHang(String tenKhachHang) {
-        this.tenKhachHang = tenKhachHang;
+    public void setTenKH(String tenKH) {
+        this.tenKH = tenKH;
     }
 
-    public String getSoDienThoai() {
-        return soDienThoai;
+    public String getSdt() {
+        return sdt;
     }
 
-    public void setSoDienThoai(String soDienThoai) {
-        this.soDienThoai = soDienThoai;
+    public void setSdt(String sdt) {
+        this.sdt = sdt;
     }
 
     public String getEmail() {
@@ -72,19 +69,22 @@ public class KhachHang {
         this.email = email;
     }
 
-    public String getDiaChi() {
-        return diaChi;
+    public String getLoaiKhach() {
+        return loaiKhach;
     }
 
-    public void setDiaChi(String diaChi) {
-        this.diaChi = diaChi;
+    public void setLoaiKhach(String loaiKhach) {
+        this.loaiKhach = loaiKhach;
     }
 
-    public String getSoCMND() {
-        return soCMND;
-    }
-
-    public void setSoCMND(String soCMND) {
-        this.soCMND = soCMND;
+    @Override
+    public String toString() {
+        return "KhachHang{" +
+                "maKH=" + maKH +
+                ", tenKH='" + tenKH + '\'' +
+                ", sdt='" + sdt + '\'' +
+                ", email='" + email + '\'' +
+                ", loaiKhach='" + loaiKhach + '\'' +
+                '}';
     }
 }
