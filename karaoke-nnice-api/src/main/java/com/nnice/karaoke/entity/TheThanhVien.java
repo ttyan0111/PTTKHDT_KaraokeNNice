@@ -1,43 +1,83 @@
 package com.nnice.karaoke.entity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 /**
- * Entity đại diện cho Thành Viên Thân Thiết
+ * Entity đại diện cho Thẻ Thành Viên
  */
 @Entity
-@Table(name = "The_Thanh_Vien")
+@Table(name = "TheThanhVien")
 public class TheThanhVien {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "MaThe")
+    private Long maThe;
     
-    @ManyToOne
-    @JoinColumn(name = "Ma_The")
-    private String maThe;
+    @Column(name = "MaKH", nullable = false)
+    private Long maKH;
     
-    @Column(name = "Hang_The")
+    @Column(name = "HangThe")
     private String hangThe;
     
-    @Column(name = "Diem_Tich_Luy")
-    private Long tongDiem;
+    @Column(name = "DiemTichLuy")
+    private Integer diemTichLuy = 0;
     
-    @Column(name = "Ngay_Cap")
-    private String trangThai;
+    @Column(name = "NgayCap")
+    private LocalDate ngayCap;
 
     // Constructors
-    public ThanhVienThanThiet() {}
+    public TheThanhVien() {
+        this.ngayCap = LocalDate.now();
+        this.diemTichLuy = 0;
+    }
 
-    public ThanhVienThanThiet(String maThe, String hangThe, Long tongDiem, String trangThai) {
-        this.maThe = maThe;
+    public TheThanhVien(Long maKH, String hangThe) {
+        this.maKH = maKH;
         this.hangThe = hangThe;
-        this.tongDiem = tongDiem;
-        this.trangThai = trangThai;
+        this.ngayCap = LocalDate.now();
+        this.diemTichLuy = 0;
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }   
+    public Long getMaThe() {
+        return maThe;
+    }
+
+    public void setMaThe(Long maThe) {
+        this.maThe = maThe;
+    }
+
+    public Long getMaKH() {
+        return maKH;
+    }
+
+    public void setMaKH(Long maKH) {
+        this.maKH = maKH;
+    }
+
+    public String getHangThe() {
+        return hangThe;
+    }
+
+    public void setHangThe(String hangThe) {
+        this.hangThe = hangThe;
+    }
+
+    public Integer getDiemTichLuy() {
+        return diemTichLuy;
+    }
+
+    public void setDiemTichLuy(Integer diemTichLuy) {
+        this.diemTichLuy = diemTichLuy;
+    }
+
+    public LocalDate getNgayCap() {
+        return ngayCap;
+    }
+
+    public void setNgayCap(LocalDate ngayCap) {
+        this.ngayCap = ngayCap;
+    }
 }

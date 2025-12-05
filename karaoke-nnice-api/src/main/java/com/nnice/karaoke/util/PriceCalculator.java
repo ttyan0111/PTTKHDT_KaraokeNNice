@@ -95,7 +95,7 @@ public class PriceCalculator {
      * Định dạng tiền tệ (VND)
      */
     public static String formatCurrency(double price) {
-        return String.format("%,.0f", price);
+        return "%,.0f".formatted(price);
     }
 
     
