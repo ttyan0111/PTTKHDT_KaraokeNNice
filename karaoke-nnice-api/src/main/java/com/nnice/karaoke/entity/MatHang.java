@@ -1,66 +1,81 @@
 package com.nnice.karaoke.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 /**
  * Entity đại diện cho Mặt Hàng
  */
 @Entity
-@Table(name = "mat_hang")
+@Table(name = "MatHang")
 public class MatHang {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "MaHang")
+    private Integer maHang;
     
-    @Column(name = "ten_mat_hang", nullable = false)
-    private String tenMatHang;
+    @Column(name = "TenHang", length = 100)
+    private String tenHang;
     
-    @Column(name = "ma_mat_hang", unique = true)
-    private String maMatHang;
+    @Column(name = "LoaiHang", length = 50)
+    private String loaiHang;
     
-    @Column(name = "don_vi_tinh")
+    @Column(name = "SoLuongTon")
+    private Integer soLuongTon = 0;
+    
+    @Column(name = "DonViTinh", length = 20)
     private String donViTinh;
     
-    @Column(name = "gia_ban")
-    private Double giaBan;
+    @Column(name = "GiaNhap")
+    private BigDecimal giaNhap;
     
-    @Column(name = "trang_thai")
-    private String trangThai;
+    @Column(name = "GiaBan")
+    private BigDecimal giaBan;
 
     // Constructors
     public MatHang() {}
 
-    public MatHang(String tenMatHang, String maMatHang, String donViTinh, Double giaBan) {
-        this.tenMatHang = tenMatHang;
-        this.maMatHang = maMatHang;
+    public MatHang(String tenHang, String loaiHang, String donViTinh, BigDecimal giaNhap, BigDecimal giaBan) {
+        this.tenHang = tenHang;
+        this.loaiHang = loaiHang;
         this.donViTinh = donViTinh;
+        this.giaNhap = giaNhap;
         this.giaBan = giaBan;
+        this.soLuongTon = 0;
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Integer getMaHang() {
+        return maHang;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMaHang(Integer maHang) {
+        this.maHang = maHang;
     }
 
-    public String getTenMatHang() {
-        return tenMatHang;
+    public String getTenHang() {
+        return tenHang;
     }
 
-    public void setTenMatHang(String tenMatHang) {
-        this.tenMatHang = tenMatHang;
+    public void setTenHang(String tenHang) {
+        this.tenHang = tenHang;
     }
 
-    public String getMaMatHang() {
-        return maMatHang;
+    public String getLoaiHang() {
+        return loaiHang;
     }
 
-    public void setMaMatHang(String maMatHang) {
-        this.maMatHang = maMatHang;
+    public void setLoaiHang(String loaiHang) {
+        this.loaiHang = loaiHang;
+    }
+
+    public Integer getSoLuongTon() {
+        return soLuongTon;
+    }
+
+    public void setSoLuongTon(Integer soLuongTon) {
+        this.soLuongTon = soLuongTon;
     }
 
     public String getDonViTinh() {
@@ -71,19 +86,32 @@ public class MatHang {
         this.donViTinh = donViTinh;
     }
 
-    public Double getGiaBan() {
+    public BigDecimal getGiaNhap() {
+        return giaNhap;
+    }
+
+    public void setGiaNhap(BigDecimal giaNhap) {
+        this.giaNhap = giaNhap;
+    }
+
+    public BigDecimal getGiaBan() {
         return giaBan;
     }
 
-    public void setGiaBan(Double giaBan) {
+    public void setGiaBan(BigDecimal giaBan) {
         this.giaBan = giaBan;
     }
 
-    public String getTrangThai() {
-        return trangThai;
-    }
-
-    public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
+    @Override
+    public String toString() {
+        return "MatHang{" +
+                "maHang=" + maHang +
+                ", tenHang='" + tenHang + '\'' +
+                ", loaiHang='" + loaiHang + '\'' +
+                ", soLuongTon=" + soLuongTon +
+                ", donViTinh='" + donViTinh + '\'' +
+                ", giaNhap=" + giaNhap +
+                ", giaBan=" + giaBan +
+                '}';
     }
 }

@@ -13,12 +13,12 @@ public class TheThanhVien {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MaThe")
-    private Long maThe;
+    private Integer maThe;
     
-    @Column(name = "MaKH", nullable = false)
-    private Long maKH;
+    @Column(name = "MaKH", nullable = false, unique = true)
+    private Integer maKH;
     
-    @Column(name = "HangThe")
+    @Column(name = "HangThe", length = 50)
     private String hangThe;
     
     @Column(name = "DiemTichLuy")
@@ -28,32 +28,29 @@ public class TheThanhVien {
     private LocalDate ngayCap;
 
     // Constructors
-    public TheThanhVien() {
-        this.ngayCap = LocalDate.now();
-        this.diemTichLuy = 0;
-    }
+    public TheThanhVien() {}
 
-    public TheThanhVien(Long maKH, String hangThe) {
+    public TheThanhVien(Integer maKH, String hangThe) {
         this.maKH = maKH;
         this.hangThe = hangThe;
-        this.ngayCap = LocalDate.now();
         this.diemTichLuy = 0;
+        this.ngayCap = LocalDate.now();
     }
 
     // Getters and Setters
-    public Long getMaThe() {
+    public Integer getMaThe() {
         return maThe;
     }
 
-    public void setMaThe(Long maThe) {
+    public void setMaThe(Integer maThe) {
         this.maThe = maThe;
     }
 
-    public Long getMaKH() {
+    public Integer getMaKH() {
         return maKH;
     }
 
-    public void setMaKH(Long maKH) {
+    public void setMaKH(Integer maKH) {
         this.maKH = maKH;
     }
 
@@ -80,4 +77,16 @@ public class TheThanhVien {
     public void setNgayCap(LocalDate ngayCap) {
         this.ngayCap = ngayCap;
     }
+
+    @Override
+    public String toString() {
+        return "TheThanhVien{" +
+                "maThe=" + maThe +
+                ", maKH=" + maKH +
+                ", hangThe='" + hangThe + '\'' +
+                ", diemTichLuy=" + diemTichLuy +
+                ", ngayCap=" + ngayCap +
+                '}';
+    }
 }
+

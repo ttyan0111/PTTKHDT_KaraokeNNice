@@ -6,54 +6,47 @@ import jakarta.persistence.*;
  * Entity đại diện cho Cơ Sở Karaoke
  */
 @Entity
-@Table(name = "co_so")
+@Table(name = "CoSo")
 public class CoSo {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "MaCS")
+    private Integer maCS;
     
-    @Column(name = "ten_co_so", nullable = false)
-    private String tenCoSo;
+    @Column(name = "TenCS", nullable = false, length = 100)
+    private String tenCS;
     
-    @Column(name = "dia_chi")
+    @Column(name = "DiaChi", length = 255)
     private String diaChi;
     
-    @Column(name = "so_dien_thoai")
-    private String soDienThoai;
-    
-    @Column(name = "email")
-    private String email;
-    
-    @Column(name = "tong_phong")
-    private Integer tongPhong;
+    @Column(name = "SDT", length = 15)
+    private String sdt;
 
     // Constructors
     public CoSo() {}
 
-    public CoSo(String tenCoSo, String diaChi, String soDienThoai, String email, Integer tongPhong) {
-        this.tenCoSo = tenCoSo;
+    public CoSo(String tenCS, String diaChi, String sdt) {
+        this.tenCS = tenCS;
         this.diaChi = diaChi;
-        this.soDienThoai = soDienThoai;
-        this.email = email;
-        this.tongPhong = tongPhong;
+        this.sdt = sdt;
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Integer getMaCS() {
+        return maCS;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMaCS(Integer maCS) {
+        this.maCS = maCS;
     }
 
-    public String getTenCoSo() {
-        return tenCoSo;
+    public String getTenCS() {
+        return tenCS;
     }
 
-    public void setTenCoSo(String tenCoSo) {
-        this.tenCoSo = tenCoSo;
+    public void setTenCS(String tenCS) {
+        this.tenCS = tenCS;
     }
 
     public String getDiaChi() {
@@ -64,27 +57,21 @@ public class CoSo {
         this.diaChi = diaChi;
     }
 
-    public String getSoDienThoai() {
-        return soDienThoai;
+    public String getSdt() {
+        return sdt;
     }
 
-    public void setSoDienThoai(String soDienThoai) {
-        this.soDienThoai = soDienThoai;
+    public void setSdt(String sdt) {
+        this.sdt = sdt;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Integer getTongPhong() {
-        return tongPhong;
-    }
-
-    public void setTongPhong(Integer tongPhong) {
-        this.tongPhong = tongPhong;
+    @Override
+    public String toString() {
+        return "CoSo{" +
+                "maCS=" + maCS +
+                ", tenCS='" + tenCS + '\'' +
+                ", diaChi='" + diaChi + '\'' +
+                ", sdt='" + sdt + '\'' +
+                '}';
     }
 }

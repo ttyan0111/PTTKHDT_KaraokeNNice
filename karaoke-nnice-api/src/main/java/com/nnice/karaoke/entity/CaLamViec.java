@@ -1,44 +1,45 @@
 package com.nnice.karaoke.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * Entity đại diện cho Ca Làm Việc
  */
 @Entity
-@Table(name = "ca_lam_viec")
+@Table(name = "CaLamViec")
 public class CaLamViec {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "MaCa")
+    private Integer maCa;
     
-    @Column(name = "ten_ca")
+    @Column(name = "TenCa", length = 50)
     private String tenCa;
     
-    @Column(name = "gio_bat_dau")
-    private String gioBatDau;
+    @Column(name = "GioBatDau")
+    private LocalTime gioBatDau;
     
-    @Column(name = "gio_ket_thuc")
-    private String gioKetThuc;
+    @Column(name = "GioKetThuc")
+    private LocalTime gioKetThuc;
 
     // Constructors
     public CaLamViec() {}
 
-    public CaLamViec(String tenCa, String gioBatDau, String gioKetThuc) {
+    public CaLamViec(String tenCa, LocalTime gioBatDau, LocalTime gioKetThuc) {
         this.tenCa = tenCa;
         this.gioBatDau = gioBatDau;
         this.gioKetThuc = gioKetThuc;
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Integer getMaCa() {
+        return maCa;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMaCa(Integer maCa) {
+        this.maCa = maCa;
     }
 
     public String getTenCa() {
@@ -49,19 +50,29 @@ public class CaLamViec {
         this.tenCa = tenCa;
     }
 
-    public String getGioBatDau() {
+    public LocalTime getGioBatDau() {
         return gioBatDau;
     }
 
-    public void setGioBatDau(String gioBatDau) {
+    public void setGioBatDau(LocalTime gioBatDau) {
         this.gioBatDau = gioBatDau;
     }
 
-    public String getGioKetThuc() {
+    public LocalTime getGioKetThuc() {
         return gioKetThuc;
     }
 
-    public void setGioKetThuc(String gioKetThuc) {
+    public void setGioKetThuc(LocalTime gioKetThuc) {
         this.gioKetThuc = gioKetThuc;
+    }
+
+    @Override
+    public String toString() {
+        return "CaLamViec{" +
+                "maCa=" + maCa +
+                ", tenCa='" + tenCa + '\'' +
+                ", gioBatDau=" + gioBatDau +
+                ", gioKetThuc=" + gioKetThuc +
+                '}';
     }
 }

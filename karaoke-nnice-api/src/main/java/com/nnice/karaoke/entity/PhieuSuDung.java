@@ -7,65 +7,100 @@ import java.time.LocalDateTime;
  * Entity đại diện cho Phiếu Sử Dụng
  */
 @Entity
-@Table(name = "phieu_su_dung")
+@Table(name = "PhieuSuDung")
 public class PhieuSuDung {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "MaPhieuSuDung")
+    private Integer maPhieuSuDung;
     
-    @ManyToOne
-    @JoinColumn(name = "dat_phong_id")
-    private DatPhong datPhong;
+    @Column(name = "MaPhong")
+    private Integer maPhong;
     
-    @Column(name = "thoi_gian_tao")
-    private LocalDateTime thoiGianTao;
+    @Column(name = "MaPhieuDat")
+    private Integer maPhieuDat;
     
-    @Column(name = "thoi_gian_ket_thuc")
-    private LocalDateTime thoiGianKetThuc;
+    @Column(name = "MaNV")
+    private Integer maNV;
     
-    @Column(name = "trang_thai")
+    @Column(name = "GioBatDau")
+    private LocalDateTime gioBatDau;
+    
+    @Column(name = "GioKetThuc")
+    private LocalDateTime gioKetThuc;
+    
+    @Column(name = "TongThoiGian")
+    private Float tongThoiGian;
+    
+    @Column(name = "TrangThai", length = 50)
     private String trangThai;
 
     // Constructors
     public PhieuSuDung() {}
 
-    public PhieuSuDung(DatPhong datPhong, LocalDateTime thoiGianTao) {
-        this.datPhong = datPhong;
-        this.thoiGianTao = thoiGianTao;
+    public PhieuSuDung(Integer maPhong, Integer maNV, LocalDateTime gioBatDau, String trangThai) {
+        this.maPhong = maPhong;
+        this.maNV = maNV;
+        this.gioBatDau = gioBatDau;
+        this.trangThai = trangThai;
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Integer getMaPhieuSuDung() {
+        return maPhieuSuDung;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMaPhieuSuDung(Integer maPhieuSuDung) {
+        this.maPhieuSuDung = maPhieuSuDung;
     }
 
-    public DatPhong getDatPhong() {
-        return datPhong;
+    public Integer getMaPhong() {
+        return maPhong;
     }
 
-    public void setDatPhong(DatPhong datPhong) {
-        this.datPhong = datPhong;
+    public void setMaPhong(Integer maPhong) {
+        this.maPhong = maPhong;
     }
 
-    public LocalDateTime getThoiGianTao() {
-        return thoiGianTao;
+    public Integer getMaPhieuDat() {
+        return maPhieuDat;
     }
 
-    public void setThoiGianTao(LocalDateTime thoiGianTao) {
-        this.thoiGianTao = thoiGianTao;
+    public void setMaPhieuDat(Integer maPhieuDat) {
+        this.maPhieuDat = maPhieuDat;
     }
 
-    public LocalDateTime getThoiGianKetThuc() {
-        return thoiGianKetThuc;
+    public Integer getMaNV() {
+        return maNV;
     }
 
-    public void setThoiGianKetThuc(LocalDateTime thoiGianKetThuc) {
-        this.thoiGianKetThuc = thoiGianKetThuc;
+    public void setMaNV(Integer maNV) {
+        this.maNV = maNV;
+    }
+
+    public LocalDateTime getGioBatDau() {
+        return gioBatDau;
+    }
+
+    public void setGioBatDau(LocalDateTime gioBatDau) {
+        this.gioBatDau = gioBatDau;
+    }
+
+    public LocalDateTime getGioKetThuc() {
+        return gioKetThuc;
+    }
+
+    public void setGioKetThuc(LocalDateTime gioKetThuc) {
+        this.gioKetThuc = gioKetThuc;
+    }
+
+    public Float getTongThoiGian() {
+        return tongThoiGian;
+    }
+
+    public void setTongThoiGian(Float tongThoiGian) {
+        this.tongThoiGian = tongThoiGian;
     }
 
     public String getTrangThai() {
@@ -74,5 +109,14 @@ public class PhieuSuDung {
 
     public void setTrangThai(String trangThai) {
         this.trangThai = trangThai;
+    }
+
+    @Override
+    public String toString() {
+        return "PhieuSuDung{" +
+                "maPhieuSuDung=" + maPhieuSuDung +
+                ", maPhong=" + maPhong +
+                ", trangThai='" + trangThai + '\'' +
+                '}';
     }
 }

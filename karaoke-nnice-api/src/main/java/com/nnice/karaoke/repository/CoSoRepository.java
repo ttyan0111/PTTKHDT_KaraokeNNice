@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CoSoRepository extends JpaRepository<CoSo, Long> {
+public interface CoSoRepository extends JpaRepository<CoSo, Integer> {
 }

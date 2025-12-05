@@ -12,7 +12,7 @@ public class KhachHang {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MaKH")
-    private Long maKH;
+    private Integer maKH;
     
     @Column(name = "TenKH", nullable = false, length = 100)
     private String tenKH;
@@ -24,7 +24,7 @@ public class KhachHang {
     private String email;
     
     @Column(name = "LoaiKhach", length = 50)
-    private String loaiKhach; // VD: "VIP", "Thường", "Doanh nghiệp"
+    private String loaiKhach;
 
     // Constructors
     public KhachHang() {}
@@ -37,11 +37,11 @@ public class KhachHang {
     }
 
     // Getters and Setters
-    public Long getMaKH() {
+    public Integer getMaKH() {
         return maKH;
     }
 
-    public void setMaKH(Long maKH) {
+    public void setMaKH(Integer maKH) {
         this.maKH = maKH;
     }
 

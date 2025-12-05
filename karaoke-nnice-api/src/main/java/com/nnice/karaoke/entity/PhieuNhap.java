@@ -1,87 +1,70 @@
 package com.nnice.karaoke.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * Entity đại diện cho Phiếu Nhập
  */
 @Entity
-@Table(name = "phieu_nhap")
+@Table(name = "PhieuNhap")
 public class PhieuNhap {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "MaPhieuNhap")
+    private Integer maPhieuNhap;
     
-    @Column(name = "ma_phieu_nhap", unique = true)
-    private String maPhieuNhap;
+    @Column(name = "MaNCC")
+    private Integer maNCC;
     
-    @ManyToOne
-    @JoinColumn(name = "mat_hang_id")
-    private MatHang matHang;
+    @Column(name = "MaNV")
+    private Integer maNV;
     
-    @Column(name = "so_luong_nhap")
-    private Integer soLuongNhap;
-    
-    @Column(name = "gia_nhap")
-    private Double giaNhap;
-    
-    @Column(name = "ngay_nhap")
+    @Column(name = "NgayNhap")
     private LocalDateTime ngayNhap;
     
-    @Column(name = "trang_thai")
-    private String trangThai;
+    @Column(name = "TongTienNhap")
+    private BigDecimal tongTienNhap;
+    
+    @Column(name = "NguoiGiaoHang", length = 100)
+    private String nguoiGiaoHang;
 
     // Constructors
     public PhieuNhap() {}
 
-    public PhieuNhap(String maPhieuNhap, MatHang matHang, Integer soLuongNhap, Double giaNhap) {
-        this.maPhieuNhap = maPhieuNhap;
-        this.matHang = matHang;
-        this.soLuongNhap = soLuongNhap;
-        this.giaNhap = giaNhap;
+    public PhieuNhap(Integer maNCC, Integer maNV, String nguoiGiaoHang) {
+        this.maNCC = maNCC;
+        this.maNV = maNV;
+        this.nguoiGiaoHang = nguoiGiaoHang;
+        this.ngayNhap = LocalDateTime.now();
+        this.tongTienNhap = BigDecimal.ZERO;
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getMaPhieuNhap() {
+    public Integer getMaPhieuNhap() {
         return maPhieuNhap;
     }
 
-    public void setMaPhieuNhap(String maPhieuNhap) {
+    public void setMaPhieuNhap(Integer maPhieuNhap) {
         this.maPhieuNhap = maPhieuNhap;
     }
 
-    public MatHang getMatHang() {
-        return matHang;
+    public Integer getMaNCC() {
+        return maNCC;
     }
 
-    public void setMatHang(MatHang matHang) {
-        this.matHang = matHang;
+    public void setMaNCC(Integer maNCC) {
+        this.maNCC = maNCC;
     }
 
-    public Integer getSoLuongNhap() {
-        return soLuongNhap;
+    public Integer getMaNV() {
+        return maNV;
     }
 
-    public void setSoLuongNhap(Integer soLuongNhap) {
-        this.soLuongNhap = soLuongNhap;
-    }
-
-    public Double getGiaNhap() {
-        return giaNhap;
-    }
-
-    public void setGiaNhap(Double giaNhap) {
-        this.giaNhap = giaNhap;
+    public void setMaNV(Integer maNV) {
+        this.maNV = maNV;
     }
 
     public LocalDateTime getNgayNhap() {
@@ -92,11 +75,28 @@ public class PhieuNhap {
         this.ngayNhap = ngayNhap;
     }
 
-    public String getTrangThai() {
-        return trangThai;
+    public BigDecimal getTongTienNhap() {
+        return tongTienNhap;
     }
 
-    public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
+    public void setTongTienNhap(BigDecimal tongTienNhap) {
+        this.tongTienNhap = tongTienNhap;
+    }
+
+    public String getNguoiGiaoHang() {
+        return nguoiGiaoHang;
+    }
+
+    public void setNguoiGiaoHang(String nguoiGiaoHang) {
+        this.nguoiGiaoHang = nguoiGiaoHang;
+    }
+
+    @Override
+    public String toString() {
+        return "PhieuNhap{" +
+                "maPhieuNhap=" + maPhieuNhap +
+                ", maNCC=" + maNCC +
+                ", maNV=" + maNV +
+                '}';
     }
 }

@@ -1,112 +1,126 @@
 package com.nnice.karaoke.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * Entity đại diện cho Hóa Đơn
  */
 @Entity
-@Table(name = "hoa_don")
+@Table(name = "HoaDon")
 public class HoaDon {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "MaHD")
+    private Integer maHD;
     
-    @Column(name = "ma_hoa_don", unique = true)
-    private String maHoaDon;
+    @Column(name = "MaPhieuSuDung", unique = true, nullable = false)
+    private Integer maPhieuSuDung;
     
-    @ManyToOne
-    @JoinColumn(name = "dat_phong_id")
-    private DatPhong datPhong;
+    @Column(name = "MaKH")
+    private Integer maKH;
     
-    @Column(name = "ngay_tao")
-    private LocalDateTime ngayTao;
+    @Column(name = "NgayLap")
+    private LocalDateTime ngayLap;
     
-    @Column(name = "tong_tien")
-    private Double tongTien;
+    @Column(name = "ThueVAT")
+    private BigDecimal thueVAT;
     
-    @Column(name = "thue")
-    private Double thue;
+    @Column(name = "GiamGia")
+    private BigDecimal giamGia;
     
-    @Column(name = "tong_thanh_toan")
-    private Double tongThanhToan;
+    @Column(name = "TongTien")
+    private BigDecimal tongTien;
     
-    @Column(name = "trang_thai")
-    private String trangThai;
+    @Column(name = "HinhThucThanhToan", length = 50)
+    private String hinhThucThanhToan;
 
     // Constructors
     public HoaDon() {}
 
-    public HoaDon(String maHoaDon, DatPhong datPhong, Double tongTien) {
-        this.maHoaDon = maHoaDon;
-        this.datPhong = datPhong;
+    public HoaDon(Integer maPhieuSuDung, Integer maKH, BigDecimal tongTien, String hinhThucThanhToan) {
+        this.maPhieuSuDung = maPhieuSuDung;
+        this.maKH = maKH;
         this.tongTien = tongTien;
+        this.hinhThucThanhToan = hinhThucThanhToan;
+        this.ngayLap = LocalDateTime.now();
+        this.thueVAT = BigDecimal.ZERO;
+        this.giamGia = BigDecimal.ZERO;
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Integer getMaHD() {
+        return maHD;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMaHD(Integer maHD) {
+        this.maHD = maHD;
     }
 
-    public String getMaHoaDon() {
-        return maHoaDon;
+    public Integer getMaPhieuSuDung() {
+        return maPhieuSuDung;
     }
 
-    public void setMaHoaDon(String maHoaDon) {
-        this.maHoaDon = maHoaDon;
+    public void setMaPhieuSuDung(Integer maPhieuSuDung) {
+        this.maPhieuSuDung = maPhieuSuDung;
     }
 
-    public DatPhong getDatPhong() {
-        return datPhong;
+    public Integer getMaKH() {
+        return maKH;
     }
 
-    public void setDatPhong(DatPhong datPhong) {
-        this.datPhong = datPhong;
+    public void setMaKH(Integer maKH) {
+        this.maKH = maKH;
     }
 
-    public LocalDateTime getNgayTao() {
-        return ngayTao;
+    public LocalDateTime getNgayLap() {
+        return ngayLap;
     }
 
-    public void setNgayTao(LocalDateTime ngayTao) {
-        this.ngayTao = ngayTao;
+    public void setNgayLap(LocalDateTime ngayLap) {
+        this.ngayLap = ngayLap;
     }
 
-    public Double getTongTien() {
+    public BigDecimal getThueVAT() {
+        return thueVAT;
+    }
+
+    public void setThueVAT(BigDecimal thueVAT) {
+        this.thueVAT = thueVAT;
+    }
+
+    public BigDecimal getGiamGia() {
+        return giamGia;
+    }
+
+    public void setGiamGia(BigDecimal giamGia) {
+        this.giamGia = giamGia;
+    }
+
+    public BigDecimal getTongTien() {
         return tongTien;
     }
 
-    public void setTongTien(Double tongTien) {
+    public void setTongTien(BigDecimal tongTien) {
         this.tongTien = tongTien;
     }
 
-    public Double getThue() {
-        return thue;
+    public String getHinhThucThanhToan() {
+        return hinhThucThanhToan;
     }
 
-    public void setThue(Double thue) {
-        this.thue = thue;
+    public void setHinhThucThanhToan(String hinhThucThanhToan) {
+        this.hinhThucThanhToan = hinhThucThanhToan;
     }
 
-    public Double getTongThanhToan() {
-        return tongThanhToan;
-    }
-
-    public void setTongThanhToan(Double tongThanhToan) {
-        this.tongThanhToan = tongThanhToan;
-    }
-
-    public String getTrangThai() {
-        return trangThai;
-    }
-
-    public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
+    @Override
+    public String toString() {
+        return "HoaDon{" +
+                "maHD=" + maHD +
+                ", maPhieuSuDung=" + maPhieuSuDung +
+                ", tongTien=" + tongTien +
+                '}';
     }
 }

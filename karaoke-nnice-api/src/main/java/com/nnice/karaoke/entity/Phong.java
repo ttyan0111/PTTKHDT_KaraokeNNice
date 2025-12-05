@@ -3,60 +3,45 @@ package com.nnice.karaoke.entity;
 import jakarta.persistence.*;
 
 /**
- * Entity đại diện cho Phòng Karaoke
+ * Entity đại diện cho Phòng
  */
 @Entity
-@Table(name = "phong")
+@Table(name = "Phong")
 public class Phong {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "MaPhong")
+    private Integer maPhong;
     
-    @Column(name = "ma_phong", nullable = false)
-    private String maPhong;
-    
-    @Column(name = "ten_phong")
+    @Column(name = "TenPhong", length = 50)
     private String tenPhong;
     
-    @Column(name = "trang_thai")
+    @Column(name = "TrangThai", length = 50)
     private String trangThai;
     
-    @Column(name = "suc_chua")
-    private Integer sucChua;
+    @Column(name = "MaCS")
+    private Integer maCS;
     
-    @Column(name = "gia_gio")
-    private Double giaGio;
-    
-    @ManyToOne
-    @JoinColumn(name = "co_so_id")
-    private CoSo coSo;
+    @Column(name = "MaLoai")
+    private Integer maLoai;
 
     // Constructors
     public Phong() {}
 
-    public Phong(String maPhong, String tenPhong, String trangThai, Integer sucChua, Double giaGio) {
-        this.maPhong = maPhong;
+    public Phong(String tenPhong, String trangThai, Integer maCS, Integer maLoai) {
         this.tenPhong = tenPhong;
         this.trangThai = trangThai;
-        this.sucChua = sucChua;
-        this.giaGio = giaGio;
+        this.maCS = maCS;
+        this.maLoai = maLoai;
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getMaPhong() {
+    public Integer getMaPhong() {
         return maPhong;
     }
 
-    public void setMaPhong(String maPhong) {
+    public void setMaPhong(Integer maPhong) {
         this.maPhong = maPhong;
     }
 
@@ -76,27 +61,30 @@ public class Phong {
         this.trangThai = trangThai;
     }
 
-    public Integer getSucChua() {
-        return sucChua;
+    public Integer getMaCS() {
+        return maCS;
     }
 
-    public void setSucChua(Integer sucChua) {
-        this.sucChua = sucChua;
+    public void setMaCS(Integer maCS) {
+        this.maCS = maCS;
     }
 
-    public Double getGiaGio() {
-        return giaGio;
+    public Integer getMaLoai() {
+        return maLoai;
     }
 
-    public void setGiaGio(Double giaGio) {
-        this.giaGio = giaGio;
+    public void setMaLoai(Integer maLoai) {
+        this.maLoai = maLoai;
     }
 
-    public CoSo getCoSo() {
-        return coSo;
-    }
-
-    public void setCoSo(CoSo coSo) {
-        this.coSo = coSo;
+    @Override
+    public String toString() {
+        return "Phong{" +
+                "maPhong=" + maPhong +
+                ", tenPhong='" + tenPhong + '\'' +
+                ", trangThai='" + trangThai + '\'' +
+                ", maCS=" + maCS +
+                ", maLoai=" + maLoai +
+                '}';
     }
 }
