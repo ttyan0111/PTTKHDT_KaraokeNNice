@@ -17,7 +17,7 @@ public class ApDungUuDaiServiceImpl implements ApDungUuDaiService {
     @Override
     public Optional<CauHinhGia> kiemTraUuDai(String maUuDai) {
         return cauHinhGiaRepository.findAll().stream()
-                .filter(c -> c.getMaUuDai().toString().equals(maUuDai))
+                .filter(c -> c.getMaCauHinh().toString().equals(maUuDai))
                 .findFirst();
     }
     

@@ -41,7 +41,7 @@ public class CapNhatDiemTichLuyServiceImpl implements CapNhatDiemTichLuyService 
         if (thanhVien.isPresent()) {
             TheThanhVien tv = thanhVien.get();
             String hangMoi = kiemTraDieuKienNangHang(tv.getDiemTichLuy() != null ? tv.getDiemTichLuy() : 0);
-            tv.setHangThanhVien(hangMoi);
+            tv.setHangThe(hangMoi);
             theThanhVienRepository.save(tv);
         }
     }

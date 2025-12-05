@@ -20,7 +20,7 @@ public class ThucHienCheckInServiceImpl implements ThucHienCheckInService {
     @Override
     public Optional<PhieuSuDung> traCuuPhieuDatPhong(String maDat) {
         return phieuSuDungRepository.findAll().stream()
-                .filter(p -> p.getMaPhieu().toString().equals(maDat))
+                .filter(p -> p.getMaPhieuDat().toString().equals(maDat))
                 .findFirst();
     }
     
@@ -38,7 +38,7 @@ public class ThucHienCheckInServiceImpl implements ThucHienCheckInService {
         Optional<PhieuSuDung> phieu = phieuSuDungRepository.findById(maPhieu);
         if (phieu.isPresent()) {
             PhieuSuDung p = phieu.get();
-            p.setThoiGianVao(thoiGianVao);
+            p.setGioBatDau(thoiGianVao);
             p.setTrangThai("Đang sử dụng");
             return phieuSuDungRepository.save(p);
         }
@@ -50,7 +50,7 @@ public class ThucHienCheckInServiceImpl implements ThucHienCheckInService {
         Optional<PhieuSuDung> phieu = phieuSuDungRepository.findById(maPhieu);
         if (phieu.isPresent()) {
             PhieuSuDung p = phieu.get();
-            p.setThoiGianRa(thoiGianRa);
+            p.setGioKetThuc(thoiGianRa);
             p.setTrangThai("Đã thanh toán");
             return phieuSuDungRepository.save(p);
         }
@@ -62,9 +62,9 @@ public class ThucHienCheckInServiceImpl implements ThucHienCheckInService {
         Optional<PhieuSuDung> phieu = phieuSuDungRepository.findById(maPhieu);
         if (phieu.isPresent()) {
             PhieuSuDung p = phieu.get();
-            if (p.getThoiGianVao() != null) {
-                long gioSuDung = java.time.temporal.ChronoUnit.HOURS.between(p.getThoiGianVao(), thoiGianRa);
-                int gioVao = p.getThoiGianVao().getHour();
+            if (p.getGioBatDau() != null) {
+                long gioSuDung = java.time.temporal.ChronoUnit.HOURS.between(p.getGioBatDau(), thoiGianRa);
+                int gioVao = p.getGioBatDau().getHour();
                 
                 if (gioVao >= 8 && gioVao < 18) {
                     return gioSuDung * GIA_NGAY;
@@ -79,7 +79,7 @@ public class ThucHienCheckInServiceImpl implements ThucHienCheckInService {
     @Override
     public PhieuSuDung xuLyKhachVangLai(Integer maPhong, int soNguoi, LocalDateTime thoiGianVao) {
         PhieuSuDung phieu = new PhieuSuDung();
-        phieu.setThoiGianVao(thoiGianVao);
+        phieu.setGioBatDau(thoiGianVao);
         phieu.setTrangThai("Đang sử dụng");
         return phieuSuDungRepository.save(phieu);
     }

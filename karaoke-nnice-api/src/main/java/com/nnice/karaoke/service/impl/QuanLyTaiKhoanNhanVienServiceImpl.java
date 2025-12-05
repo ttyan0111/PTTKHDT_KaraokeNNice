@@ -34,8 +34,7 @@ public class QuanLyTaiKhoanNhanVienServiceImpl implements QuanLyTaiKhoanNhanVien
         Optional<NhanVien> nhanVien = nhanVienRepository.findById(maNhanVien);
         if (nhanVien.isPresent()) {
             NhanVien nv = nhanVien.get();
-            nv.setTrangThai("Vô hiệu hóa");
-            nhanVienRepository.save(nv);
+            nhanVienRepository.delete(nv);
         }
     }
     

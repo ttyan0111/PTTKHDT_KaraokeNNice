@@ -25,9 +25,8 @@ public class QuanLyDatPhongServiceImpl implements QuanLyDatPhongService {
     @Autowired
     private LoaiPhongRepository loaiPhongRepository;
     
-    private static final long GIA_NGAY = 25000L; // 25,000đ/giờ (8h-18h)
-    private static final long GIA_DEM = 45000L;  // 45,000đ/giờ (18h-24h)
-    private static final int PHUT_MIEN_PHI = 15;
+    private static final long GIA_NGAY = 25000L;
+    private static final long GIA_DEM = 45000L;
     
     @Override
     public PhieuDatPhong taoPhieuDatPhong(PhieuDatPhong phieuDatPhong) {
