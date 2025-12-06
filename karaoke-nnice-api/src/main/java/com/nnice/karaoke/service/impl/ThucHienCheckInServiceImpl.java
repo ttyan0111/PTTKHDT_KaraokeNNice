@@ -20,7 +20,7 @@ public class ThucHienCheckInServiceImpl implements ThucHienCheckInService {
     @Override
     public Optional<PhieuSuDung> traCuuPhieuDatPhong(String maDat) {
         return phieuSuDungRepository.findAll().stream()
-                .filter(p -> p.getMaPhieuDat().toString().equals(maDat))
+                .filter(p -> p.getPhieuDatPhong() != null && p.getPhieuDatPhong().getMaPhieuDat().toString().equals(maDat))
                 .findFirst();
     }
     
@@ -39,7 +39,7 @@ public class ThucHienCheckInServiceImpl implements ThucHienCheckInService {
         if (phieu.isPresent()) {
             PhieuSuDung p = phieu.get();
             p.setGioBatDau(thoiGianVao);
-            p.setTrangThai("Đang sử dụng");
+            p.setTrangThai("Dang su dung");
             return phieuSuDungRepository.save(p);
         }
         return null;
@@ -51,7 +51,7 @@ public class ThucHienCheckInServiceImpl implements ThucHienCheckInService {
         if (phieu.isPresent()) {
             PhieuSuDung p = phieu.get();
             p.setGioKetThuc(thoiGianRa);
-            p.setTrangThai("Đã thanh toán");
+            p.setTrangThai("Da thanh toan");
             return phieuSuDungRepository.save(p);
         }
         return null;
@@ -80,7 +80,7 @@ public class ThucHienCheckInServiceImpl implements ThucHienCheckInService {
     public PhieuSuDung xuLyKhachVangLai(Integer maPhong, int soNguoi, LocalDateTime thoiGianVao) {
         PhieuSuDung phieu = new PhieuSuDung();
         phieu.setGioBatDau(thoiGianVao);
-        phieu.setTrangThai("Đang sử dụng");
+        phieu.setTrangThai("Dang su dung");
         return phieuSuDungRepository.save(phieu);
     }
     

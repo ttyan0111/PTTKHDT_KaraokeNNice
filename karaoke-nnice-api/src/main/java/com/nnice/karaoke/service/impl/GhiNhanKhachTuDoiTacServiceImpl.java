@@ -35,7 +35,7 @@ public class GhiNhanKhachTuDoiTacServiceImpl implements GhiNhanKhachTuDoiTacServ
     
     @Override
     public PhieuDatPhong taoDonDatPhongTuDoiTac(Integer maDoiTac, PhieuDatPhong phieuDatPhong) {
-        phieuDatPhong.setTrangThai("Từ đối tác");
+        phieuDatPhong.setTrangThai("Tu doi tac");
         return phieuDatPhongRepository.save(phieuDatPhong);
     }
     

@@ -1,33 +1,28 @@
 package com.nnice.karaoke.service;
 
-import com.nnice.karaoke.entity.PhieuDatPhong;
-import com.nnice.karaoke.entity.Phong;
+import com.nnice.karaoke.dto.request.DatPhongRequest;
+import com.nnice.karaoke.dto.response.DatPhongResponse;
+import com.nnice.karaoke.dto.response.PhongKhaDungResponse;
+
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface QuanLyDatPhongService {
     // Tạo đơn đặt phòng mới
-    PhieuDatPhong taoPhieuDatPhong(PhieuDatPhong phieuDatPhong);
+    DatPhongResponse taoPhieuDatPhong(DatPhongRequest request);
     
-    // Tra cứu phòng trống
-    List<Phong> traCuuPhongTrong(int soNguoi, LocalDateTime tuNgay, LocalDateTime denNgay);
-    
-    // Tính chi phí dự kiến
-    Long tinhChiPhiDuKien(int soGio, LocalDateTime thoiGianBatDau);
+    // Tìm phòng trống
+    List<PhongKhaDungResponse> timPhongTrong(Integer soNguoi, LocalDateTime tuNgay, LocalDateTime denNgay);
     
     // Xem chi tiết đặt phòng
-    Optional<PhieuDatPhong> xemChiTiet(Integer maPhieu);
+    DatPhongResponse xemPhieuDatPhong(Integer maPhieu);
     
     // Cập nhật đặt phòng
-    PhieuDatPhong capNhatDatPhong(PhieuDatPhong phieuDatPhong);
+    DatPhongResponse capNhatPhieuDatPhong(Integer maPhieu, DatPhongRequest request);
     
     // Hủy đặt phòng
-    void huydatPhong(Integer maPhieu, String lyDo);
+    void huyPhieuDatPhong(Integer maPhieu, String lyDoHuy);
     
-    // Danh sách đặt phòng theo trạng thái
-    List<PhieuDatPhong> danhSachTheoDatPhong(String trangThai);
-    
-    // Gửi xác nhận SMS/Email (để tích hợp sau)
-    void guiXacNhan(Integer maPhieu);
+    // Danh sách đặt phòng theo khách hàng
+    List<DatPhongResponse> layDanhSachPhieuDatTheoKhach(Integer maKhach);
 }

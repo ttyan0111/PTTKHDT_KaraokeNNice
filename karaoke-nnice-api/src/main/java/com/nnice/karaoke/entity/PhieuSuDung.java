@@ -1,13 +1,20 @@
 package com.nnice.karaoke.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDateTime;
 
 /**
  * Entity đại diện cho Phiếu Sử Dụng
+ * Ghi nhận thời gian thực tế khách sử dụng phòng (Check-in/Check-out)
  */
 @Entity
 @Table(name = "PhieuSuDung")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class PhieuSuDung {
     
     @Id
@@ -15,14 +22,18 @@ public class PhieuSuDung {
     @Column(name = "MaPhieuSuDung")
     private Integer maPhieuSuDung;
     
-    @Column(name = "MaPhong")
-    private Integer maPhong;
+    // Relationships
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MaPhong", referencedColumnName = "MaPhong")
+    private Phong phong;
     
-    @Column(name = "MaPhieuDat")
-    private Integer maPhieuDat;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MaPhieuDat", referencedColumnName = "MaPhieuDat")
+    private PhieuDatPhong phieuDatPhong;
     
-    @Column(name = "MaNV")
-    private Integer maNV;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MaNV", referencedColumnName = "MaNV")
+    private NhanVien nhanVien;
     
     @Column(name = "GioBatDau")
     private LocalDateTime gioBatDau;
@@ -34,89 +45,12 @@ public class PhieuSuDung {
     private Float tongThoiGian;
     
     @Column(name = "TrangThai", length = 50)
-    private String trangThai;
+    private String trangThai; // "Đang sử dụng", "Đã kết thúc"
 
-    // Constructors
-    public PhieuSuDung() {}
-
-    public PhieuSuDung(Integer maPhong, Integer maNV, LocalDateTime gioBatDau, String trangThai) {
-        this.maPhong = maPhong;
-        this.maNV = maNV;
-        this.gioBatDau = gioBatDau;
-        this.trangThai = trangThai;
-    }
-
-    // Getters and Setters
-    public Integer getMaPhieuSuDung() {
-        return maPhieuSuDung;
-    }
-
-    public void setMaPhieuSuDung(Integer maPhieuSuDung) {
-        this.maPhieuSuDung = maPhieuSuDung;
-    }
-
-    public Integer getMaPhong() {
-        return maPhong;
-    }
-
-    public void setMaPhong(Integer maPhong) {
-        this.maPhong = maPhong;
-    }
-
-    public Integer getMaPhieuDat() {
-        return maPhieuDat;
-    }
-
-    public void setMaPhieuDat(Integer maPhieuDat) {
-        this.maPhieuDat = maPhieuDat;
-    }
-
-    public Integer getMaNV() {
-        return maNV;
-    }
-
-    public void setMaNV(Integer maNV) {
-        this.maNV = maNV;
-    }
-
-    public LocalDateTime getGioBatDau() {
-        return gioBatDau;
-    }
-
-    public void setGioBatDau(LocalDateTime gioBatDau) {
-        this.gioBatDau = gioBatDau;
-    }
-
-    public LocalDateTime getGioKetThuc() {
-        return gioKetThuc;
-    }
-
-    public void setGioKetThuc(LocalDateTime gioKetThuc) {
-        this.gioKetThuc = gioKetThuc;
-    }
-
-    public Float getTongThoiGian() {
-        return tongThoiGian;
-    }
-
-    public void setTongThoiGian(Float tongThoiGian) {
-        this.tongThoiGian = tongThoiGian;
-    }
-
-    public String getTrangThai() {
-        return trangThai;
-    }
-
-    public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
-    }
-
-    @Override
-    public String toString() {
-        return "PhieuSuDung{" +
-                "maPhieuSuDung=" + maPhieuSuDung +
-                ", maPhong=" + maPhong +
-                ", trangThai='" + trangThai + '\'' +
-                '}';
+    // Business methods để tính toán thời gian
+    public void tinhThoiGian() {
+        if (gioBatDau != null && gioKetThuc != null) {
+            this.tongThoiGian = (float) java.time.Duration.between(gioBatDau, gioKetThuc).toHours();
+        }
     }
 }

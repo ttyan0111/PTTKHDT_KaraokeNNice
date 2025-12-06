@@ -13,7 +13,11 @@ CREATE TABLE CoSo (
 CREATE TABLE LoaiPhong (
     MaLoai INT AUTO_INCREMENT PRIMARY KEY,
     TenLoai VARCHAR(50),
-    SucChua INT
+    SucChua INT,
+    GiaTheoGio DECIMAL(18,0) NOT NULL,
+    MoTa VARCHAR(255),
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE CaLamViec (
@@ -37,7 +41,12 @@ CREATE TABLE MatHang (
     SoLuongTon INT DEFAULT 0,
     DonViTinh VARCHAR(20),
     GiaNhap DECIMAL(18,0),
-    GiaBan DECIMAL(18,0)
+    GiaBan DECIMAL(18,0),
+    MoTa TEXT,
+    HinhAnh VARCHAR(255),
+    TrangThai VARCHAR(50) DEFAULT 'Con hang',
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE DoiTac (
@@ -50,7 +59,11 @@ CREATE TABLE DoiTac (
 CREATE TABLE GoiTiec (
     MaGoi INT AUTO_INCREMENT PRIMARY KEY,
     TenGoi VARCHAR(100),
-    GiaTronGoi DECIMAL(18,0)
+    MoTa TEXT,
+    SoLuongBanToiThieu INT DEFAULT 10,
+    GiaTronGoi DECIMAL(18,0),
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE KhachHang (
@@ -58,7 +71,14 @@ CREATE TABLE KhachHang (
     TenKH VARCHAR(100) NOT NULL,
     SDT VARCHAR(15) UNIQUE, 
     Email VARCHAR(100),
-    LoaiKhach VARCHAR(50)
+    DiaChi VARCHAR(255),
+    NgaySinh DATE,
+    GioiTinh VARCHAR(10),
+    CMND VARCHAR(20),
+    LoaiKhach VARCHAR(50) DEFAULT 'Thuong',
+    NgayDangKy DATE DEFAULT (CURRENT_DATE),
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
@@ -76,9 +96,18 @@ CREATE TABLE NhanVien (
     MaNV INT AUTO_INCREMENT PRIMARY KEY,
     HoTen VARCHAR(100),
     ChucVu VARCHAR(50),
+    SDT VARCHAR(15),
+    Email VARCHAR(100),
+    DiaChi VARCHAR(255),
+    NgaySinh DATE,
+    CMND VARCHAR(20),
+    NgayVaoLam DATE DEFAULT (CURRENT_DATE),
     HeSoLuong FLOAT,
     TyLeThuongDoanhThu FLOAT,
+    TrangThai VARCHAR(50) DEFAULT 'Dang lam viec',
     MaCS INT,
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (MaCS) REFERENCES CoSo(MaCS)
 );
 
@@ -98,6 +127,11 @@ CREATE TABLE CauHinhGia (
     KhungGio VARCHAR(50), 
     LoaiNgay VARCHAR(50),
     DonGia DECIMAL(18,0),
+    ApDungTuNgay DATE,
+    ApDungDenNgay DATE,
+    TrangThai VARCHAR(50) DEFAULT 'Dang ap dung',
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (MaLoai) REFERENCES LoaiPhong(MaLoai)
 );
 
@@ -106,13 +140,19 @@ CREATE TABLE CauHinhGia (
 CREATE TABLE PhieuDatPhong (
     MaPhieuDat INT AUTO_INCREMENT PRIMARY KEY,
     MaKH INT,
+    MaPhong INT,
     MaDT INT NULL,
     NgayDat DATETIME DEFAULT CURRENT_TIMESTAMP,
     GioDat DATETIME,
     GioKetThuc DATETIME,
+    SoNguoi INT NOT NULL,
     TienCoc DECIMAL(18,0) DEFAULT 0,
-    TrangThai VARCHAR(50),
+    TrangThai VARCHAR(50) DEFAULT 'Da dat',
+    GhiChu VARCHAR(500),
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH),
+    FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong),
     FOREIGN KEY (MaDT) REFERENCES DoiTac(MaDT)
 );
 
@@ -156,12 +196,22 @@ CREATE TABLE HoaDon (
     MaPhieuSuDung INT NOT NULL UNIQUE,
     MaKH INT,
     NgayLap DATETIME DEFAULT CURRENT_TIMESTAMP,
-    ThueVAT DECIMAL(18,0),
-    GiamGia DECIMAL(18,0),
-    TongTien DECIMAL(18,0),
+    TienPhong DECIMAL(18,0) DEFAULT 0,
+    TienDichVu DECIMAL(18,0) DEFAULT 0,
+    TongTienChuaThue DECIMAL(18,0) DEFAULT 0,
+    ThueVAT DECIMAL(18,0) DEFAULT 0,
+    GiamGia DECIMAL(18,0) DEFAULT 0,
+    TongTien DECIMAL(18,0) DEFAULT 0,
+    TienCocDaTra DECIMAL(18,0) DEFAULT 0,
+    ConPhaiTra DECIMAL(18,0) DEFAULT 0,
     HinhThucThanhToan VARCHAR(50),
+    TrangThai VARCHAR(50) DEFAULT 'Chua thanh toan',
+    MaNVThanhToan INT,
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (MaPhieuSuDung) REFERENCES PhieuSuDung(MaPhieuSuDung),
-    FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH)
+    FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH),
+    FOREIGN KEY (MaNVThanhToan) REFERENCES NhanVien(MaNV)
 );
 
 
@@ -267,3 +317,35 @@ CREATE TABLE ChiTietKiemKe (
     FOREIGN KEY (MaKiemKe) REFERENCES PhieuKiemKe(MaKiemKe),
     FOREIGN KEY (MaHang) REFERENCES MatHang(MaHang)
 );
+
+-- Thêm bảng ChiTietGoiTiec (đang thiếu)
+CREATE TABLE ChiTietGoiTiec (
+    MaGoi INT,
+    MaHang INT,
+    SoLuong INT NOT NULL,
+    GhiChu VARCHAR(255),
+    PRIMARY KEY (MaGoi, MaHang),
+    FOREIGN KEY (MaGoi) REFERENCES GoiTiec(MaGoi),
+    FOREIGN KEY (MaHang) REFERENCES MatHang(MaHang)
+);
+
+-- Indexes để tăng performance
+CREATE INDEX idx_phong_trangthai ON Phong(TrangThai);
+CREATE INDEX idx_phong_coso ON Phong(MaCS);
+CREATE INDEX idx_phong_loai ON Phong(MaLoai);
+CREATE INDEX idx_nhanvien_coso ON NhanVien(MaCS);
+CREATE INDEX idx_nhanvien_trangthai ON NhanVien(TrangThai);
+CREATE INDEX idx_phieudatphong_trangthai ON PhieuDatPhong(TrangThai);
+CREATE INDEX idx_phieudatphong_ngaydat ON PhieuDatPhong(NgayDat);
+CREATE INDEX idx_phieudatphong_phong ON PhieuDatPhong(MaPhong);
+CREATE INDEX idx_khachhang_sdt ON KhachHang(SDT);
+CREATE INDEX idx_phieusudung_trangthai ON PhieuSuDung(TrangThai);
+CREATE INDEX idx_phieusudung_phong ON PhieuSuDung(MaPhong);
+CREATE INDEX idx_dongoimon_phieusudung ON DonGoiMon(MaPhieuSuDung);
+CREATE INDEX idx_hoadon_trangthai ON HoaDon(TrangThai);
+CREATE INDEX idx_mathang_loai ON MatHang(LoaiHang);
+CREATE INDEX idx_mathang_trangthai ON MatHang(TrangThai);
+CREATE INDEX idx_bangchamcong_nhanvien ON BangChamCong(MaNV);
+CREATE INDEX idx_bangchamcong_ngaylam ON BangChamCong(NgayLam);
+CREATE INDEX idx_bangluong_nhanvien ON BangLuong(MaNV);
+CREATE INDEX idx_bangluong_thangnam ON BangLuong(Thang, Nam);
