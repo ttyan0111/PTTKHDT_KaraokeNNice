@@ -1,5 +1,6 @@
 package com.nnice.karaoke.service.impl;
 
+import com.nnice.karaoke.dto.response.ThanhVienResponse;
 import com.nnice.karaoke.entity.TheThanhVien;
 import com.nnice.karaoke.repository.TheThanhVienRepository;
 import com.nnice.karaoke.service.CapNhatDiemTichLuyService;
@@ -16,7 +17,7 @@ public class CapNhatDiemTichLuyServiceImpl implements CapNhatDiemTichLuyService 
     private static final long GIA_TRI_MIEN_PHI = 10000L; // 10,000đ = 1 điểm
     
     @Override
-    public void tichDiem(Integer maThanhVien, Long tongTien) {
+    public boolean tichDiem(Integer maThanhVien, Long tongTien) {
         int diemCong = (int) (tongTien / GIA_TRI_MIEN_PHI);
         Optional<TheThanhVien> thanhVien = theThanhVienRepository.findById(maThanhVien);
         if (thanhVien.isPresent()) {
@@ -24,7 +25,9 @@ public class CapNhatDiemTichLuyServiceImpl implements CapNhatDiemTichLuyService 
             int diemHienTai = tv.getDiemTichLuy() != null ? tv.getDiemTichLuy() : 0;
             tv.setDiemTichLuy(diemHienTai + diemCong);
             theThanhVienRepository.save(tv);
+            return true;
         }
+        return false;
     }
     
     @Override
@@ -57,8 +60,19 @@ public class CapNhatDiemTichLuyServiceImpl implements CapNhatDiemTichLuyService 
     }
     
     @Override
-    public Optional<TheThanhVien> xemThongTinThanhVien(Integer maThanhVien) {
-        return theThanhVienRepository.findById(maThanhVien);
+    public ThanhVienResponse xemThongTinThanhVien(Integer maThanhVien) {
+        Optional<TheThanhVien> thanhVien = theThanhVienRepository.findById(maThanhVien);
+        if (thanhVien.isPresent()) {
+            TheThanhVien tv = thanhVien.get();
+            return ThanhVienResponse.builder()
+                    .maThe(tv.getMaThe())
+                    .maKH(tv.getMaKH())
+                    .hangThe(tv.getHangThe())
+                    .diemTichLuy(tv.getDiemTichLuy() != null ? tv.getDiemTichLuy() : 0)
+                    .ngayCap(tv.getNgayCap())
+                    .build();
+        }
+        return null; // hoặc throw exception nếu không tìm thấy
     }
     
     @Override

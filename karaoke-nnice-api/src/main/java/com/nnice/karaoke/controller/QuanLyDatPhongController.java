@@ -28,7 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Quản lý Đặt Phòng", description = "APIs quản lý đặt phòng karaoke")
-public class DatPhongController {
+public class QuanLyDatPhongController {
     
     private final QuanLyDatPhongServiceImpl datPhongService;
     

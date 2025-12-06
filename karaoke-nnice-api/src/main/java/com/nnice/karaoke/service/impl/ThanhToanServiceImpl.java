@@ -1,10 +1,13 @@
 package com.nnice.karaoke.service.impl;
 
+import com.nnice.karaoke.dto.request.ThanhToanRequest;
+import com.nnice.karaoke.dto.response.ThanhToanResponse;
 import com.nnice.karaoke.entity.HoaDon;
 import com.nnice.karaoke.repository.HoaDonRepository;
 import com.nnice.karaoke.service.ThanhToanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -16,9 +19,10 @@ public class ThanhToanServiceImpl implements ThanhToanService {
     private static final double VAT = 0.10; // 10%
     
     @Override
-    public HoaDon taoHoaDon(Integer maPhieuSuDung) {
+    public ThanhToanResponse taoHoaDon(Integer maPhieuSuDung) {
         HoaDon hoaDon = new HoaDon();
-        return hoaDonRepository.save(hoaDon);
+        HoaDon saved = hoaDonRepository.save(hoaDon);
+        return convertToResponse(saved);
     }
     
     @Override
@@ -57,12 +61,28 @@ public class ThanhToanServiceImpl implements ThanhToanService {
     }
     
     @Override
-    public Optional<HoaDon> xemChiTiet(Integer maHoaDon) {
-        return hoaDonRepository.findById(maHoaDon);
+    public ThanhToanResponse xemChiTiet(Integer maHoaDon) {
+        Optional<HoaDon> hoaDon = hoaDonRepository.findById(maHoaDon);
+        return hoaDon.map(this::convertToResponse).orElse(null);
     }
     
     @Override
     public void tichDiem(Integer maKhach, Long tongTien) {
         // TODO: Implement
+    }
+    
+    private ThanhToanResponse convertToResponse(HoaDon hoaDon) {
+        return ThanhToanResponse.builder()
+                .maHoaDon(hoaDon.getMaHD())
+                .maPhieuSuDung(hoaDon.getMaPhieuSuDung())
+                .maKH(hoaDon.getMaKH())
+                .ngayLap(hoaDon.getNgayLap())
+                .tienPhong(BigDecimal.ZERO)
+                .tienAnUong(BigDecimal.ZERO)
+                .thueVAT(hoaDon.getThueVAT())
+                .giamGia(hoaDon.getGiamGia())
+                .tongTien(hoaDon.getTongTien())
+                .hinhThucThanhToan(hoaDon.getHinhThucThanhToan())
+                .build();
     }
 }

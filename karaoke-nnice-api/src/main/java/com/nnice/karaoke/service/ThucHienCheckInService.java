@@ -1,27 +1,29 @@
 package com.nnice.karaoke.service;
 
-import com.nnice.karaoke.entity.PhieuSuDung;
+import com.nnice.karaoke.dto.request.CheckInRequest;
+import com.nnice.karaoke.dto.request.CheckOutRequest;
+import com.nnice.karaoke.dto.response.CheckInResponse;
+import com.nnice.karaoke.dto.response.CheckOutResponse;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public interface ThucHienCheckInService {
     // Tra cứu đơn đặt phòng để check-in
-    Optional<PhieuSuDung> traCuuPhieuDatPhong(String maDat);
+    CheckInResponse traCuuPhieuDatPhong(String maDat);
     
     // Xác nhận thông tin khách (CMND/CCCD, số người)
     void xacNhanThongTinKhach(Integer maPhieu, String soCMND, int soNguoiThuc);
     
     // Check-in: ghi nhận thời gian vào
-    PhieuSuDung thucHienCheckIn(Integer maPhieu, LocalDateTime thoiGianVao);
+    CheckInResponse thucHienCheckIn(CheckInRequest request);
     
     // Check-out: ghi nhận thời gian ra
-    PhieuSuDung thucHienCheckOut(Integer maPhieu, LocalDateTime thoiGianRa);
+    CheckOutResponse thucHienCheckOut(CheckOutRequest request);
     
     // Tính tiền theo thời gian thực tế
     Long tinhTienThucTe(Integer maPhieu, LocalDateTime thoiGianRa);
     
     // Xử lý khách vãng lai (không đặt trước)
-    PhieuSuDung xuLyKhachVangLai(Integer maPhong, int soNguoi, LocalDateTime thoiGianVao);
+    CheckInResponse xuLyKhachVangLai(Integer maPhong, int soNguoi, LocalDateTime thoiGianVao);
     
     // Kiểm tra phòng còn trống
     boolean kiemTraPhongTrong(Integer maPhong);

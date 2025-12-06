@@ -1,13 +1,13 @@
 package com.nnice.karaoke.service;
 
-import com.nnice.karaoke.entity.DonDatTiec;
+import com.nnice.karaoke.dto.request.DatTiecRequest;
+import com.nnice.karaoke.dto.response.DatTiecResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface QuanLyDatTiecService {
     // Tạo đơn đặt tiệc mới
-    DonDatTiec taoDonDatTiec(DonDatTiec donDatTiec);
+    DatTiecResponse taoDonDatTiec(DatTiecRequest donDatTiec);
     
     // Tính tổng chi phí dự kiến
     Long tinhChiPhiTiec(Integer maTiec);
@@ -19,16 +19,16 @@ public interface QuanLyDatTiecService {
     void xuLyThanhToanCoc(Integer maTiec, Long soTien, String hinhThuc);
     
     // Xem chi tiết đặt tiệc
-    Optional<DonDatTiec> xemChiTiet(Integer maTiec);
+    DatTiecResponse xemChiTiet(Integer maTiec);
     
     // Cập nhật đặt tiệc
-    DonDatTiec capNhatDatTiec(DonDatTiec donDatTiec);
+    DatTiecResponse capNhatDatTiec(Integer maTiec, DatTiecRequest donDatTiec);
     
     // Hủy đặt tiệc (xử lý hoàn cọc theo quy định)
     void huyDatTiec(Integer maTiec, String lyDo);
     
     // Danh sách đặt tiệc
-    List<DonDatTiec> danhSachDatTiec(String trangThai);
+    List<DatTiecResponse> danhSachDatTiec(String trangThai);
     
     // Khóa phòng/sảnh tiệc
     void khoapHongTiec(Integer maTiec);

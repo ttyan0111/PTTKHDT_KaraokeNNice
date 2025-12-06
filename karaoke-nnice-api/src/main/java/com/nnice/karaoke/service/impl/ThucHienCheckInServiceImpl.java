@@ -1,5 +1,9 @@
 package com.nnice.karaoke.service.impl;
 
+import com.nnice.karaoke.dto.request.CheckInRequest;
+import com.nnice.karaoke.dto.request.CheckOutRequest;
+import com.nnice.karaoke.dto.response.CheckInResponse;
+import com.nnice.karaoke.dto.response.CheckOutResponse;
 import com.nnice.karaoke.entity.PhieuSuDung;
 import com.nnice.karaoke.repository.PhieuSuDungRepository;
 import com.nnice.karaoke.service.ThucHienCheckInService;
@@ -18,10 +22,11 @@ public class ThucHienCheckInServiceImpl implements ThucHienCheckInService {
     private static final long GIA_DEM = 45000L;
     
     @Override
-    public Optional<PhieuSuDung> traCuuPhieuDatPhong(String maDat) {
-        return phieuSuDungRepository.findAll().stream()
+    public CheckInResponse traCuuPhieuDatPhong(String maDat) {
+        Optional<PhieuSuDung> phieu = phieuSuDungRepository.findAll().stream()
                 .filter(p -> p.getPhieuDatPhong() != null && p.getPhieuDatPhong().getMaPhieuDat().toString().equals(maDat))
                 .findFirst();
+        return phieu.map(this::convertToCheckInResponse).orElse(null);
     }
     
     @Override
@@ -34,25 +39,27 @@ public class ThucHienCheckInServiceImpl implements ThucHienCheckInService {
     }
     
     @Override
-    public PhieuSuDung thucHienCheckIn(Integer maPhieu, LocalDateTime thoiGianVao) {
-        Optional<PhieuSuDung> phieu = phieuSuDungRepository.findById(maPhieu);
+    public CheckInResponse thucHienCheckIn(CheckInRequest request) {
+        Optional<PhieuSuDung> phieu = phieuSuDungRepository.findById(request.getMaPhieuDat());
         if (phieu.isPresent()) {
             PhieuSuDung p = phieu.get();
-            p.setGioBatDau(thoiGianVao);
+            p.setGioBatDau(LocalDateTime.now());
             p.setTrangThai("Dang su dung");
-            return phieuSuDungRepository.save(p);
+            PhieuSuDung saved = phieuSuDungRepository.save(p);
+            return convertToCheckInResponse(saved);
         }
         return null;
     }
     
     @Override
-    public PhieuSuDung thucHienCheckOut(Integer maPhieu, LocalDateTime thoiGianRa) {
-        Optional<PhieuSuDung> phieu = phieuSuDungRepository.findById(maPhieu);
+    public CheckOutResponse thucHienCheckOut(CheckOutRequest request) {
+        Optional<PhieuSuDung> phieu = phieuSuDungRepository.findById(request.getMaPhieuSuDung());
         if (phieu.isPresent()) {
             PhieuSuDung p = phieu.get();
-            p.setGioKetThuc(thoiGianRa);
+            p.setGioKetThuc(LocalDateTime.now());
             p.setTrangThai("Da thanh toan");
-            return phieuSuDungRepository.save(p);
+            PhieuSuDung saved = phieuSuDungRepository.save(p);
+            return convertToCheckOutResponse(saved);
         }
         return null;
     }
@@ -77,15 +84,35 @@ public class ThucHienCheckInServiceImpl implements ThucHienCheckInService {
     }
     
     @Override
-    public PhieuSuDung xuLyKhachVangLai(Integer maPhong, int soNguoi, LocalDateTime thoiGianVao) {
+    public CheckInResponse xuLyKhachVangLai(Integer maPhong, int soNguoi, LocalDateTime thoiGianVao) {
         PhieuSuDung phieu = new PhieuSuDung();
         phieu.setGioBatDau(thoiGianVao);
         phieu.setTrangThai("Dang su dung");
-        return phieuSuDungRepository.save(phieu);
+        PhieuSuDung saved = phieuSuDungRepository.save(phieu);
+        return convertToCheckInResponse(saved);
     }
     
     @Override
     public boolean kiemTraPhongTrong(Integer maPhong) {
         return true; // TODO: Implement real logic
+    }
+    
+    private CheckInResponse convertToCheckInResponse(PhieuSuDung phieu) {
+        return CheckInResponse.builder()
+                .maPhieuSuDung(phieu.getMaPhieuSuDung())
+                .maPhong(phieu.getPhong() != null ? phieu.getPhong().getMaPhong() : null)
+                .thoiGianCheckIn(phieu.getGioBatDau())
+                .trangThai(phieu.getTrangThai())
+                .build();
+    }
+    
+    private CheckOutResponse convertToCheckOutResponse(PhieuSuDung phieu) {
+        return CheckOutResponse.builder()
+                .maPhieuSuDung(phieu.getMaPhieuSuDung())
+                .maPhong(phieu.getPhong() != null ? phieu.getPhong().getMaPhong() : null)
+                .gioBatDau(phieu.getGioBatDau())
+                .gioKetThuc(phieu.getGioKetThuc())
+                .trangThai(phieu.getTrangThai())
+                .build();
     }
 }

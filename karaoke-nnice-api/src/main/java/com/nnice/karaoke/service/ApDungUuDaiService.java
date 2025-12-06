@@ -1,12 +1,11 @@
 package com.nnice.karaoke.service;
 
-import com.nnice.karaoke.entity.CauHinhGia;
+import com.nnice.karaoke.dto.response.ApDungUuDaiResponse;
 import java.util.List;
-import java.util.Optional;
 
 public interface ApDungUuDaiService {
     // Kiểm tra mã ưu đãi
-    Optional<CauHinhGia> kiemTraUuDai(String maUuDai);
+    ApDungUuDaiResponse kiemTraUuDai(String maUuDai);
     
     // Kiểm tra ưu đãi còn hạn
     boolean kiemTraUuDaiConHan(Integer maUuDai);
@@ -27,5 +26,5 @@ public interface ApDungUuDaiService {
     void danhDauDaSuDung(Integer maUuDai);
     
     // Danh sách ưu đãi còn hiệu lực
-    List<CauHinhGia> danhSachUuDaiConHan();
+    List<ApDungUuDaiResponse> danhSachUuDaiConHan();
 }

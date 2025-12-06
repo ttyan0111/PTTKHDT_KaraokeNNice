@@ -1,11 +1,11 @@
 package com.nnice.karaoke.service;
 
-import com.nnice.karaoke.entity.HoaDon;
-import java.util.Optional;
+import com.nnice.karaoke.dto.request.ThanhToanRequest;
+import com.nnice.karaoke.dto.response.ThanhToanResponse;
 
 public interface ThanhToanService {
     // Tạo hóa đơn từ phiếu sử dụng
-    HoaDon taoHoaDon(Integer maPhieuSuDung);
+    ThanhToanResponse taoHoaDon(Integer maPhieuSuDung);
     
     // Tính tổng tiền phòng
     Long tinhTienPhong(Integer maPhieu);
@@ -29,7 +29,7 @@ public interface ThanhToanService {
     void xuLyThanhToan(Integer maHoaDon, Long soTien, String hinhThuc);
     
     // Xem chi tiết hóa đơn
-    Optional<HoaDon> xemChiTiet(Integer maHoaDon);
+    ThanhToanResponse xemChiTiet(Integer maHoaDon);
     
     // Tích điểm cho thành viên
     void tichDiem(Integer maKhach, Long tongTien);
