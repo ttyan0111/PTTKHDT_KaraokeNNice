@@ -16,7 +16,7 @@ import java.util.List;
 public interface PhieuDatPhongRepository extends JpaRepository<PhieuDatPhong, Integer> {
     
     // Tìm phiếu đặt theo khách hàng
-    List<PhieuDatPhong> findByKhachHang_MaKhach(Integer maKhach);
+    List<PhieuDatPhong> findByKhachHang_MaKH(Integer maKH);
     
     // Tìm phiếu đặt theo phòng và trạng thái khác
     List<PhieuDatPhong> findByPhong_MaPhongAndTrangThaiNot(Integer maPhong, String trangThai);

@@ -34,7 +34,7 @@ public class QuanLyThanhVienThietController {
         return ResponseEntity.ok(ma);
     }
 
-    @GetMapping("/{maThanhVien}")
+    @GetMapping("/ma/{maThanhVien}")
     @Operation(summary = "Tra cứu thông tin thành viên")
     public ResponseEntity<TheThanhVien> traCuuThongTin(@PathVariable Integer maThanhVien) {
         Optional<TheThanhVien> member = quanLyThanhVienThietService.traCuuThongTin(maThanhVien);

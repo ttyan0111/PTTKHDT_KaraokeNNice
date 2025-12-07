@@ -1,12 +1,16 @@
 package com.nnice.karaoke.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+import java.util.List;
 
-/**
- * Entity đại diện cho Cơ Sở Karaoke
- */
 @Entity
 @Table(name = "CoSo")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CoSo {
     
     @Id
@@ -22,56 +26,10 @@ public class CoSo {
     
     @Column(name = "SDT", length = 15)
     private String sdt;
-
-    // Constructors
-    public CoSo() {}
-
-    public CoSo(String tenCS, String diaChi, String sdt) {
-        this.tenCS = tenCS;
-        this.diaChi = diaChi;
-        this.sdt = sdt;
-    }
-
-    // Getters and Setters
-    public Integer getMaCS() {
-        return maCS;
-    }
-
-    public void setMaCS(Integer maCS) {
-        this.maCS = maCS;
-    }
-
-    public String getTenCS() {
-        return tenCS;
-    }
-
-    public void setTenCS(String tenCS) {
-        this.tenCS = tenCS;
-    }
-
-    public String getDiaChi() {
-        return diaChi;
-    }
-
-    public void setDiaChi(String diaChi) {
-        this.diaChi = diaChi;
-    }
-
-    public String getSdt() {
-        return sdt;
-    }
-
-    public void setSdt(String sdt) {
-        this.sdt = sdt;
-    }
-
-    @Override
-    public String toString() {
-        return "CoSo{" +
-                "maCS=" + maCS +
-                ", tenCS='" + tenCS + '\'' +
-                ", diaChi='" + diaChi + '\'' +
-                ", sdt='" + sdt + '\'' +
-                '}';
-    }
+    
+    @OneToMany(mappedBy = "coSo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Phong> phongs;
+    
+    @OneToMany(mappedBy = "coSo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<NhanVien> nhanViens;
 }

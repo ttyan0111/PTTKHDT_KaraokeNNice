@@ -132,7 +132,7 @@ public class QuanLyDatPhongServiceImpl implements QuanLyDatPhongService {
     
     @Override
     public List<DatPhongResponse> layDanhSachPhieuDatTheoKhach(Integer maKhach) {
-        List<PhieuDatPhong> phieus = phieuDatPhongRepository.findByKhachHang_MaKhach(maKhach);
+        List<PhieuDatPhong> phieus = phieuDatPhongRepository.findByKhachHang_MaKH(maKhach);
         
         return phieus.stream()
                 .map(this::convertToResponse)

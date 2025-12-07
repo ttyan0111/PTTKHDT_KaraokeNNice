@@ -2,12 +2,10 @@ package com.nnice.karaoke.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
-/**
- * Entity đại diện cho Phiếu Sử Dụng
- * Ghi nhận thời gian thực tế khách sử dụng phòng (Check-in/Check-out)
- */
 @Entity
 @Table(name = "PhieuSuDung")
 @Getter
@@ -22,17 +20,16 @@ public class PhieuSuDung {
     @Column(name = "MaPhieuSuDung")
     private Integer maPhieuSuDung;
     
-    // Relationships
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MaPhong", referencedColumnName = "MaPhong")
+    @JoinColumn(name = "MaPhong", nullable = false)
     private Phong phong;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MaPhieuDat", referencedColumnName = "MaPhieuDat")
+    @JoinColumn(name = "MaPhieuDat")
     private PhieuDatPhong phieuDatPhong;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MaNV", referencedColumnName = "MaNV")
+    @JoinColumn(name = "MaNV", nullable = false)
     private NhanVien nhanVien;
     
     @Column(name = "GioBatDau")
@@ -45,12 +42,11 @@ public class PhieuSuDung {
     private Float tongThoiGian;
     
     @Column(name = "TrangThai", length = 50)
-    private String trangThai; // "Đang sử dụng", "Đã kết thúc"
-
-    // Business methods để tính toán thời gian
-    public void tinhThoiGian() {
-        if (gioBatDau != null && gioKetThuc != null) {
-            this.tongThoiGian = (float) java.time.Duration.between(gioBatDau, gioKetThuc).toHours();
-        }
-    }
+    private String trangThai;
+    
+    @OneToOne(mappedBy = "phieuSuDung", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private HoaDon hoaDon;
+    
+    @OneToMany(mappedBy = "phieuSuDung", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<DonGoiMon> donGoiMons;
 }

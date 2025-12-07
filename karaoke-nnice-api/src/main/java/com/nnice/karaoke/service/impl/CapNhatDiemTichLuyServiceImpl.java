@@ -61,18 +61,15 @@ public class CapNhatDiemTichLuyServiceImpl implements CapNhatDiemTichLuyService 
     
     @Override
     public ThanhVienResponse xemThongTinThanhVien(Integer maThanhVien) {
-        Optional<TheThanhVien> thanhVien = theThanhVienRepository.findById(maThanhVien);
-        if (thanhVien.isPresent()) {
-            TheThanhVien tv = thanhVien.get();
-            return ThanhVienResponse.builder()
-                    .maThe(tv.getMaThe())
-                    .maKH(tv.getMaKH())
-                    .hangThe(tv.getHangThe())
-                    .diemTichLuy(tv.getDiemTichLuy() != null ? tv.getDiemTichLuy() : 0)
-                    .ngayCap(tv.getNgayCap())
-                    .build();
-        }
-        return null; // hoặc throw exception nếu không tìm thấy
+        TheThanhVien tv = theThanhVienRepository.findById(maThanhVien)
+                .orElseThrow(() -> new RuntimeException("TheThanhVien not found with id: " + maThanhVien));
+        return ThanhVienResponse.builder()
+                .maThe(tv.getMaThe())
+                .maKH(tv.getKhachHang() != null ? tv.getKhachHang().getMaKH() : null)
+                .hangThe(tv.getHangThe())
+                .diemTichLuy(tv.getDiemTichLuy() != null ? tv.getDiemTichLuy() : 0)
+                .ngayCap(tv.getNgayCap())
+                .build();
     }
     
     @Override

@@ -3,7 +3,11 @@ package com.nnice.karaoke.service.impl;
 import com.nnice.karaoke.dto.request.DatTiecRequest;
 import com.nnice.karaoke.dto.response.DatTiecResponse;
 import com.nnice.karaoke.entity.DonDatTiec;
+import com.nnice.karaoke.entity.KhachHang;
+import com.nnice.karaoke.entity.GoiTiec;
 import com.nnice.karaoke.repository.DonDatTiecRepository;
+import com.nnice.karaoke.repository.KhachHangRepository;
+import com.nnice.karaoke.repository.GoiTiecRepository;
 import com.nnice.karaoke.service.QuanLyDatTiecService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +20,28 @@ public class QuanLyDatTiecServiceImpl implements QuanLyDatTiecService {
     @Autowired
     private DonDatTiecRepository donDatTiecRepository;
     
+    @Autowired
+    private KhachHangRepository khachHangRepository;
+    
+    @Autowired
+    private GoiTiecRepository goiTiecRepository;
+    
     private static final double TY_LE_COC = 0.20; // 20%
     
     @Override
     public DatTiecResponse taoDonDatTiec(DatTiecRequest request) {
+        if (request == null || request.getMaKH() == null || request.getMaGoi() == null) {
+            throw new RuntimeException("DatTiecRequest, MaKH and MaGoi cannot be null");
+        }
         DonDatTiec don = new DonDatTiec();
-        don.setMaKH(request.getMaKH());
-        don.setMaGoi(request.getMaGoi());
+        
+        KhachHang khachHang = khachHangRepository.findById(request.getMaKH())
+                .orElseThrow(() -> new RuntimeException("KhachHang not found with id: " + request.getMaKH()));
+        GoiTiec goiTiec = goiTiecRepository.findById(request.getMaGoi())
+                .orElseThrow(() -> new RuntimeException("GoiTiec not found with id: " + request.getMaGoi()));
+        
+        don.setKhachHang(khachHang);
+        don.setGoiTiec(goiTiec);
         don.setNgayToChuc(request.getNgayToChuc());
         don.setSoLuongNguoi(request.getSoLuongNguoi());
         don.setTrangThai("Chờ xác nhận");
@@ -57,8 +76,12 @@ public class QuanLyDatTiecServiceImpl implements QuanLyDatTiecService {
     public DatTiecResponse capNhatDatTiec(Integer maTiec, DatTiecRequest request) {
         DonDatTiec don = donDatTiecRepository.findById(maTiec).orElse(null);
         if (don != null) {
-            don.setMaKH(request.getMaKH());
-            don.setMaGoi(request.getMaGoi());
+            // Sử dụng relationship - lấy entity từ database
+            KhachHang khachHang = khachHangRepository.findById(request.getMaKH()).orElse(null);
+            GoiTiec goiTiec = goiTiecRepository.findById(request.getMaGoi()).orElse(null);
+            
+            don.setKhachHang(khachHang);
+            don.setGoiTiec(goiTiec);
             don.setNgayToChuc(request.getNgayToChuc());
             don.setSoLuongNguoi(request.getSoLuongNguoi());
             DonDatTiec updated = donDatTiecRepository.save(don);
@@ -99,8 +122,8 @@ public class QuanLyDatTiecServiceImpl implements QuanLyDatTiecService {
     private DatTiecResponse convertToResponse(DonDatTiec don) {
         return DatTiecResponse.builder()
                 .maDonDatTiec(don.getMaDonDatTiec())
-                .maKH(don.getMaKH())
-                .maGoi(don.getMaGoi())
+                .maKH(don.getKhachHang() != null ? don.getKhachHang().getMaKH() : null)
+                .maGoi(don.getGoiTiec() != null ? don.getGoiTiec().getMaGoi() : null)
                 .ngayToChuc(don.getNgayToChuc())
                 .soLuongNguoi(don.getSoLuongNguoi())
                 .tongTien(don.getTongTien())

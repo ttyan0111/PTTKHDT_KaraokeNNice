@@ -10,7 +10,6 @@ import com.nnice.karaoke.service.ThucHienCheckInService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class ThucHienCheckInServiceImpl implements ThucHienCheckInService {
@@ -23,61 +22,67 @@ public class ThucHienCheckInServiceImpl implements ThucHienCheckInService {
     
     @Override
     public CheckInResponse traCuuPhieuDatPhong(String maDat) {
-        Optional<PhieuSuDung> phieu = phieuSuDungRepository.findAll().stream()
+        if (maDat == null) {
+            throw new RuntimeException("MaDat cannot be null");
+        }
+        PhieuSuDung phieu = phieuSuDungRepository.findAll().stream()
                 .filter(p -> p.getPhieuDatPhong() != null && p.getPhieuDatPhong().getMaPhieuDat().toString().equals(maDat))
-                .findFirst();
-        return phieu.map(this::convertToCheckInResponse).orElse(null);
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("PhieuSuDung not found with MaDat: " + maDat));
+        return convertToCheckInResponse(phieu);
     }
     
     @Override
     public void xacNhanThongTinKhach(Integer maPhieu, String soCMND, int soNguoiThuc) {
-        Optional<PhieuSuDung> phieu = phieuSuDungRepository.findById(maPhieu);
-        if (phieu.isPresent()) {
-            PhieuSuDung p = phieu.get();
-            phieuSuDungRepository.save(p);
+        if (maPhieu == null) {
+            throw new RuntimeException("MaPhieu cannot be null");
         }
+        PhieuSuDung p = phieuSuDungRepository.findById(maPhieu)
+                .orElseThrow(() -> new RuntimeException("PhieuSuDung not found with id: " + maPhieu));
+        phieuSuDungRepository.save(p);
     }
     
     @Override
     public CheckInResponse thucHienCheckIn(CheckInRequest request) {
-        Optional<PhieuSuDung> phieu = phieuSuDungRepository.findById(request.getMaPhieuDat());
-        if (phieu.isPresent()) {
-            PhieuSuDung p = phieu.get();
-            p.setGioBatDau(LocalDateTime.now());
-            p.setTrangThai("Dang su dung");
-            PhieuSuDung saved = phieuSuDungRepository.save(p);
-            return convertToCheckInResponse(saved);
+        if (request == null || request.getMaPhieuDat() == null) {
+            throw new RuntimeException("CheckInRequest and MaPhieuDat cannot be null");
         }
-        return null;
+        PhieuSuDung p = phieuSuDungRepository.findById(request.getMaPhieuDat())
+                .orElseThrow(() -> new RuntimeException("PhieuSuDung not found with id: " + request.getMaPhieuDat()));
+        p.setGioBatDau(LocalDateTime.now());
+        p.setTrangThai("Dang su dung");
+        PhieuSuDung saved = phieuSuDungRepository.save(p);
+        return convertToCheckInResponse(saved);
     }
     
     @Override
     public CheckOutResponse thucHienCheckOut(CheckOutRequest request) {
-        Optional<PhieuSuDung> phieu = phieuSuDungRepository.findById(request.getMaPhieuSuDung());
-        if (phieu.isPresent()) {
-            PhieuSuDung p = phieu.get();
-            p.setGioKetThuc(LocalDateTime.now());
-            p.setTrangThai("Da thanh toan");
-            PhieuSuDung saved = phieuSuDungRepository.save(p);
-            return convertToCheckOutResponse(saved);
+        if (request == null || request.getMaPhieuSuDung() == null) {
+            throw new RuntimeException("CheckOutRequest and MaPhieuSuDung cannot be null");
         }
-        return null;
+        PhieuSuDung p = phieuSuDungRepository.findById(request.getMaPhieuSuDung())
+                .orElseThrow(() -> new RuntimeException("PhieuSuDung not found with id: " + request.getMaPhieuSuDung()));
+        p.setGioKetThuc(LocalDateTime.now());
+        p.setTrangThai("Da thanh toan");
+        PhieuSuDung saved = phieuSuDungRepository.save(p);
+        return convertToCheckOutResponse(saved);
     }
     
     @Override
     public Long tinhTienThucTe(Integer maPhieu, LocalDateTime thoiGianRa) {
-        Optional<PhieuSuDung> phieu = phieuSuDungRepository.findById(maPhieu);
-        if (phieu.isPresent()) {
-            PhieuSuDung p = phieu.get();
-            if (p.getGioBatDau() != null) {
-                long gioSuDung = java.time.temporal.ChronoUnit.HOURS.between(p.getGioBatDau(), thoiGianRa);
-                int gioVao = p.getGioBatDau().getHour();
-                
-                if (gioVao >= 8 && gioVao < 18) {
-                    return gioSuDung * GIA_NGAY;
-                } else {
-                    return gioSuDung * GIA_DEM;
-                }
+        if (maPhieu == null || thoiGianRa == null) {
+            throw new RuntimeException("MaPhieu and ThoiGianRa cannot be null");
+        }
+        PhieuSuDung p = phieuSuDungRepository.findById(maPhieu)
+                .orElseThrow(() -> new RuntimeException("PhieuSuDung not found with id: " + maPhieu));
+        if (p.getGioBatDau() != null) {
+            long gioSuDung = java.time.temporal.ChronoUnit.HOURS.between(p.getGioBatDau(), thoiGianRa);
+            int gioVao = p.getGioBatDau().getHour();
+            
+            if (gioVao >= 8 && gioVao < 18) {
+                return gioSuDung * GIA_NGAY;
+            } else {
+                return gioSuDung * GIA_DEM;
             }
         }
         return 0L;
