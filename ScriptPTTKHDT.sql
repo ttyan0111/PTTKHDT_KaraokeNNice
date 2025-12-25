@@ -136,7 +136,7 @@ CREATE TABLE CauHinhGia (
 
 CREATE TABLE PhieuDatPhong (
     MaPhieuDat INT AUTO_INCREMENT PRIMARY KEY,
-    MaKH INT,
+    MaKH INT NULL, -- Made nullable to support walk-in guests
     MaPhong INT,
     MaDT INT NULL,
     NgayDat DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -335,6 +335,7 @@ CREATE INDEX idx_nhanvien_trangthai ON NhanVien(TrangThai);
 CREATE INDEX idx_phieudatphong_trangthai ON PhieuDatPhong(TrangThai);
 CREATE INDEX idx_phieudatphong_ngaydat ON PhieuDatPhong(NgayDat);
 CREATE INDEX idx_phieudatphong_phong ON PhieuDatPhong(MaPhong);
+CREATE INDEX idx_phieudatphong_makh ON PhieuDatPhong(MaKH); -- Added for customer queries
 CREATE INDEX idx_khachhang_sdt ON KhachHang(SDT);
 CREATE INDEX idx_phieusudung_trangthai ON PhieuSuDung(TrangThai);
 CREATE INDEX idx_phieusudung_phong ON PhieuSuDung(MaPhong);
