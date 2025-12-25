@@ -456,10 +456,10 @@ INSERT INTO CaLamViec (TenCa, GioBatDau, GioKetThuc) VALUES
 -- 5. Insert NhanVien (Staff)
 INSERT INTO NhanVien (HoTen, ChucVu, SDT, Email, DiaChi, NgayVaoLam, HeSoLuong, TrangThai, MaCS) VALUES
 ('Quản Trị Viên', 'Quản Trị Hệ Thống', '0901111111', 'admin@karaoke.com', 'Hệ Thống', CURRENT_DATE, 1.5, 'Dang lam viec', 1),
-('Trần Quốc A', 'Tiếp Tân', '0912345678', 'staff1@karaoke.com', 'TP.HCM', CURRENT_DATE, 1.0, 'Dang lam viec', 1),
-('Phạm Thị B', 'Thu Ngân', '0912345679', 'staff2@karaoke.com', 'TP.HCM', CURRENT_DATE, 1.0, 'Dang lam viec', 1),
-('Lê Văn C', 'Phục Vụ', '0912345680', 'staff3@karaoke.com', 'TP.HCM', CURRENT_DATE, 0.8, 'Dang lam viec', 1),
-('Nguyễn Thị D', 'Phục Vụ', '0912345681', 'staff4@karaoke.com', 'TP.HCM', CURRENT_DATE, 0.8, 'Dang lam viec', 1);
+('Trần Quốc A', 'TiepTan', '0912345678', 'staff1@karaoke.com', 'TP.HCM', CURRENT_DATE, 1.0, 'Dang lam viec', 1),
+('Phạm Thị B', 'ThuNgan', '0912345679', 'staff2@karaoke.com', 'TP.HCM', CURRENT_DATE, 1.0, 'Dang lam viec', 1),
+('Lê Văn C', 'PhucVu', '0912345680', 'staff3@karaoke.com', 'TP.HCM', CURRENT_DATE, 0.8, 'Dang lam viec', 1),
+('Nguyễn Thị D', 'PhucVu', '0912345681', 'staff4@karaoke.com', 'TP.HCM', CURRENT_DATE, 0.8, 'Dang lam viec', 1);
 
 -- 6. Insert KhachHang (Customers)
 INSERT INTO KhachHang (TenKH, SDT, Email, CMND, LoaiKhach) VALUES
