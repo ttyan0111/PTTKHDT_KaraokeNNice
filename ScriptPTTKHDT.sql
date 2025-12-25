@@ -391,10 +391,9 @@ INSERT INTO CoSo (TenCS, DiaChi, SDT) VALUES
 INSERT INTO NhanVien (HoTen, ChucVu, SDT, Email, DiaChi, NgayVaoLam, HeSoLuong, TrangThai, MaCS) VALUES
 ('Quản Trị Viên', 'Quản Trị Hệ Thống', '0123456789', 'admin@karaoke.com', 'Hệ Thống', CURRENT_DATE, 1.5, 'Dang lam viec', 1);
 
--- Insert default TaiKhoan for Admin (Password: admin123 - BCrypt hash)
--- Hash: $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36P4/Ko2
+-- Insert default TaiKhoan for Admin (Password: 123321 - BCrypt hash)
 INSERT INTO TaiKhoan (TenDangNhap, MatKhauHash, LoaiTaiKhoan, MaNhanVien, TrangThai) VALUES
-('admin', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36P4/Ko2', 'NHAN_VIEN', 1, 'Hoat dong');
+('admin', '$2a$10$zutSZ14RbyEFDrVzmfBroOPS4bsarKg3jqne7I107inN329T3YN6K', 'NHAN_VIEN', 1, 'Hoat dong');
 
 -- ============= INSERT SAMPLE MENU ITEMS (MatHang) =============
 -- Đồ Ăn (Food)
