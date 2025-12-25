@@ -8,6 +8,7 @@ import com.nnice.karaoke.exception.BusinessException;
 import com.nnice.karaoke.exception.ResourceNotFoundException;
 import com.nnice.karaoke.repository.*;
 import com.nnice.karaoke.service.QuanLyDatPhongService;
+import com.nnice.karaoke.util.PriceCalculator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,18 +23,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class QuanLyDatPhongServiceImpl implements QuanLyDatPhongService {
-    
+
     private final PhieuDatPhongRepository phieuDatPhongRepository;
     private final PhongRepository phongRepository;
     private final KhachHangRepository khachHangRepository;
     private final CauHinhGiaRepository cauHinhGiaRepository;
     private final DoiTacRepository doiTacRepository;
     private final PhieuSuDungRepository phieuSuDungRepository;
-    
+
     @Override
     public DatPhongResponse taoPhieuDatPhong(DatPhongRequest request) {
         log.info("Tạo phiếu đặt phòng cho khách: {}", request.getTenKH());
-        
+
         // Kiểm tra/tạo khách hàng
         KhachHang khachHang = khachHangRepository.findBySdt(request.getSdt())
                 .orElseGet(() -> {
@@ -44,11 +45,11 @@ public class QuanLyDatPhongServiceImpl implements QuanLyDatPhongService {
                             .build();
                     return khachHangRepository.save(kh);
                 });
-        
+
         // Kiểm tra phòng
         Phong phong = phongRepository.findById(request.getMaPhong())
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phòng ID: " + request.getMaPhong()));
-        
+
         // Tạo phiếu đặt phòng
         PhieuDatPhong phieu = PhieuDatPhong.builder()
                 .khachHang(khachHang)
@@ -60,44 +61,44 @@ public class QuanLyDatPhongServiceImpl implements QuanLyDatPhongService {
                 .trangThai("Da dat")
                 .ghiChu(request.getGhiChu())
                 .build();
-        
+
         if (request.getMaDoiTac() != null) {
             DoiTac doiTac = doiTacRepository.findById(request.getMaDoiTac())
                     .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đối tác"));
             phieu.setDoiTac(doiTac);
         }
-        
+
         PhieuDatPhong saved = phieuDatPhongRepository.save(phieu);
-        
+
         return convertToResponse(saved);
     }
-    
+
     @Override
     @Transactional(readOnly = true)
     public List<PhongKhaDungResponse> timPhongTrong(Integer soNguoi, LocalDateTime tuNgay, LocalDateTime denNgay) {
         log.info("Tìm phòng trống - Số người: {}, Từ: {}, Đến: {}", soNguoi, tuNgay, denNgay);
-        
+
         // TODO: Implement logic to filter by soNguoi, tuNgay, denNgay
         List<Phong> phongTrong = phongRepository.findPhongTrong();
-        
+
         return phongTrong.stream()
                 .map(this::convertToPhongResponse)
                 .collect(Collectors.toList());
     }
-    
+
     @Override
     public DatPhongResponse xemPhieuDatPhong(Integer maPhieu) {
         PhieuDatPhong phieu = phieuDatPhongRepository.findById(maPhieu)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phiếu đặt phòng ID: " + maPhieu));
-        
+
         return convertToResponse(phieu);
     }
-    
+
     @Override
     public DatPhongResponse capNhatPhieuDatPhong(Integer maPhieu, DatPhongRequest request) {
         PhieuDatPhong phieu = phieuDatPhongRepository.findById(maPhieu)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phiếu đặt phòng ID: " + maPhieu));
-        
+
         // Cập nhật thông tin
         if (request.getGioDat() != null) {
             phieu.setGioDat(request.getGioDat());
@@ -111,36 +112,138 @@ public class QuanLyDatPhongServiceImpl implements QuanLyDatPhongService {
         if (request.getGhiChu() != null) {
             phieu.setGhiChu(request.getGhiChu());
         }
-        
+
         PhieuDatPhong updated = phieuDatPhongRepository.save(phieu);
         return convertToResponse(updated);
     }
-    
+
     @Override
     public void huyPhieuDatPhong(Integer maPhieu, String lyDoHuy) {
         PhieuDatPhong phieu = phieuDatPhongRepository.findById(maPhieu)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phiếu đặt phòng ID: " + maPhieu));
-        
+
         if ("Da huy".equals(phieu.getTrangThai())) {
             throw new BusinessException("Phiếu đã bị hủy trước đó");
         }
-        
+
         phieu.setTrangThai("Da huy");
         phieu.setGhiChu(phieu.getGhiChu() + " | Ly do huy: " + lyDoHuy);
         phieuDatPhongRepository.save(phieu);
     }
-    
+
     @Override
     public List<DatPhongResponse> layDanhSachPhieuDatTheoKhach(Integer maKhach) {
         List<PhieuDatPhong> phieus = phieuDatPhongRepository.findByKhachHang_MaKH(maKhach);
-        
+
         return phieus.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
-    
+
+    public List<DatPhongResponse> traCuuPhieuDat(String sdt, String maDatPhong) {
+        log.info("Tra cứu phiếu đặt - SĐT: {}, Mã: {}", sdt, maDatPhong);
+
+        List<PhieuDatPhong> phieus;
+
+        if (sdt != null && !sdt.trim().isEmpty()) {
+            // Tìm theo SĐT
+            phieus = phieuDatPhongRepository.findByKhachHang_Sdt(sdt);
+        } else if (maDatPhong != null && !maDatPhong.trim().isEmpty()) {
+            // Tìm theo mã
+            try {
+                Integer ma = Integer.parseInt(maDatPhong);
+                PhieuDatPhong phieu = phieuDatPhongRepository.findById(ma).orElse(null);
+                phieus = phieu != null ? List.of(phieu) : List.of();
+            } catch (NumberFormatException e) {
+                phieus = List.of();
+            }
+        } else {
+            // Lấy tất cả
+            phieus = phieuDatPhongRepository.findAll();
+        }
+
+        return phieus.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    public DatPhongResponse capNhatTrangThai(Integer maPhieu, String trangThai) {
+        log.info("Cập nhật trạng thái phiếu đặt {} - Trạng thái mới: {}", maPhieu, trangThai);
+
+        PhieuDatPhong phieu = phieuDatPhongRepository.findById(maPhieu)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phiếu đặt phòng ID: " + maPhieu));
+
+        phieu.setTrangThai(trangThai);
+        PhieuDatPhong updated = phieuDatPhongRepository.save(phieu);
+
+        log.info("Đã cập nhật trạng thái phiếu đặt {} thành: {}", maPhieu, trangThai);
+
+        return convertToResponse(updated);
+    }
+
+    public List<com.nnice.karaoke.dto.response.OccupiedSlotResponse> getOccupiedSlots(
+            LocalDateTime date, LocalDateTime startTime, LocalDateTime endTime) {
+        log.info("Lấy danh sách phòng bận - Ngày: {}, Từ: {}, Đến: {}", date, startTime, endTime);
+
+        // Lấy tất cả bookings trong ngày, không bị hủy
+        List<PhieuDatPhong> bookings = phieuDatPhongRepository.findAll().stream()
+                .filter(p -> !"Da huy".equals(p.getTrangThai()))
+                .filter(p -> {
+                    // Check if booking date matches
+                    if (date != null && p.getGioDat() != null) {
+                        return p.getGioDat().toLocalDate().equals(date.toLocalDate());
+                    }
+                    return true;
+                })
+                .filter(p -> {
+                    // Check time overlap if start/end provided
+                    if (startTime != null && endTime != null && p.getGioDat() != null && p.getGioKetThuc() != null) {
+                        // Overlap: booking.start < endTime AND booking.end > startTime
+                        return p.getGioDat().isBefore(endTime) && p.getGioKetThuc().isAfter(startTime);
+                    }
+                    return true;
+                })
+                .collect(Collectors.toList());
+
+        return bookings.stream()
+                .map(this::convertToOccupiedSlot)
+                .collect(Collectors.toList());
+    }
+
+    private com.nnice.karaoke.dto.response.OccupiedSlotResponse convertToOccupiedSlot(PhieuDatPhong phieu) {
+        return com.nnice.karaoke.dto.response.OccupiedSlotResponse.builder()
+                .maPhong(phieu.getPhong().getMaPhong())
+                .tenPhong(phieu.getPhong().getTenPhong())
+                .gioDat(phieu.getGioDat())
+                .gioKetThuc(phieu.getGioKetThuc())
+                .maPhieuDat(phieu.getMaPhieuDat())
+                .tenKH(phieu.getKhachHang().getTenKH())
+                .build();
+    }
+
+    @Transactional
+    public void xoaPhieuDat(Integer maPhieuDat) {
+        log.info("Xóa phiếu đặt: {}", maPhieuDat);
+
+        PhieuDatPhong phieu = phieuDatPhongRepository.findById(maPhieuDat)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phiếu đặt phòng ID: " + maPhieuDat));
+
+        phieuDatPhongRepository.delete(phieu);
+
+        log.info("Đã xóa phiếu đặt: {}", maPhieuDat);
+    }
+
     // Helper methods
     private DatPhongResponse convertToResponse(PhieuDatPhong phieu) {
+        // Calculate total price
+        Double giaTheoGio = phieu.getPhong() != null && phieu.getPhong().getLoaiPhong() != null
+                ? phieu.getPhong().getLoaiPhong().getGiaTheoGio()
+                : 0.0;
+        double tongTien = PriceCalculator.tinhTienDatPhong(
+                giaTheoGio,
+                phieu.getGioDat(),
+                phieu.getGioKetThuc());
+
         return DatPhongResponse.builder()
                 .maPhieuDat(phieu.getMaPhieuDat())
                 .tenKH(phieu.getKhachHang().getTenKH())
@@ -151,22 +254,23 @@ public class QuanLyDatPhongServiceImpl implements QuanLyDatPhongService {
                 .ngayDat(phieu.getNgayDat())
                 .gioDat(phieu.getGioDat())
                 .gioKetThuc(phieu.getGioKetThuc())
+                .chiPhiDuKien(java.math.BigDecimal.valueOf(tongTien))
                 .trangThai(phieu.getTrangThai())
                 .ghiChu(phieu.getGhiChu())
                 .build();
     }
-    
+
     private PhongKhaDungResponse convertToPhongResponse(Phong phong) {
         String tenLoai = "";
         Integer sucChua = 0;
         String moTa = "";
-        
+
         if (phong.getLoaiPhong() != null) {
             tenLoai = phong.getLoaiPhong().getTenLoai();
             sucChua = phong.getLoaiPhong().getSucChua();
             moTa = phong.getLoaiPhong().getMoTa();
         }
-        
+
         return PhongKhaDungResponse.builder()
                 .maPhong(phong.getMaPhong())
                 .tenPhong(phong.getTenPhong())
